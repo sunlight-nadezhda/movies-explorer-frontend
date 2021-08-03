@@ -2,6 +2,7 @@ import React from 'react';
 import './Main.css';
 import NavTab from "../NavTab/NavTab";
 import Promo from "../Promo/Promo";
+import AboutProject from "../AboutProject/AboutProject";
 
 class Main extends React.Component {
 
@@ -10,6 +11,7 @@ class Main extends React.Component {
       <div className="page">
         <NavTab />
         <Promo />
+        <AboutProject />
       </div>
     );
   }
