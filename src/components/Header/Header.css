@@ -37,3 +37,15 @@
   color: #FFFFFF;
   text-decoration: none;
 }
+
+@media (max-width: 1020px) {
+  .header {
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 760px) {
+  .header {
+    padding: 0 14px;
+  }
+}

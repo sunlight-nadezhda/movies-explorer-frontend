@@ -41,11 +41,11 @@
   line-height: 157%;
 }
 
-.about-me__social {
+/* .about-me__social {
   display: flex;
   justify-content: space-between;
   max-width: 132px;
-}
+} */
 
 .about-me__social-item {
   font-weight: 500;
@@ -53,6 +53,8 @@
   line-height: 17px;
   text-decoration: none;
   color: #000;
+  display: inline-block;
+  margin-right: 20px;
 }
 
 .about-me__portfolio-title {
@@ -84,4 +86,77 @@
 .about-me__portfolio-item:last-of-type {
   border: none;
   padding-bottom: 0;
+}
+
+@media (max-width: 1020px) {
+  .about-me {
+    padding: 90px 50px;
+  }
+  .about-me__text {
+    max-width: 364px;
+  }
+  .about-me__name {
+    font-size: 40px;
+    line-height: 100%;
+  }
+  .about-me__about {
+    margin-top: 16px;
+    font-size: 12px;
+    line-height: 150%;
+  }
+  .about-me__info {
+    margin-top: 20px;
+    font-size: 12px;
+    line-height: 150%;
+  }
+  .about-me__portfolio-title {
+    margin-top: 90px;
+  }
+  .about-me__portfolio-item {
+    font-size: 28px;
+    line-height: 179%;
+  }
+}
+
+@media (max-width: 760px) {
+  .about-me {
+    padding: 70px 14px;
+  }
+  .about-me__description {
+    flex-direction: column;
+  }
+  .about-me__image {
+    order: -1;
+  }
+  .about-me__text {
+    margin-top: 40px;
+  }
+  .about-me__name {
+    font-size: 30px;
+    line-height: 36px;
+  }
+  .about-me__about {
+    margin-top: 20px;
+    font-size: 11px;
+    line-height: 145%;
+  }
+  .about-me__info {
+    font-size: 11px;
+    line-height: 145%;
+  }
+  .about-me__social {
+    margin-top: 40px;
+  }
+  .about-me__social-item {
+    margin-right: 26px;
+  }
+  .about-me__portfolio-title {
+    margin-top: 70px;
+    font-size: 14px;
+    line-height: 143%;
+  }
+  .about-me__portfolio-item {
+    font-size: 18px;
+    line-height: 156%;
+  }
 }
