@@ -7,7 +7,7 @@ class Header extends React.Component {
 
   render() {
     return (
-      <nav className="header header_place_landing">
+      <header className="header header_place_landing">
         <Link to="/">
           <img alt='Логотип' src={logoPath} />
         </Link>
@@ -17,7 +17,7 @@ class Header extends React.Component {
         <Link to="/signin" className="header__button">
           Войти
         </Link>
-      </nav>
+      </header>
     );
   }
 }
