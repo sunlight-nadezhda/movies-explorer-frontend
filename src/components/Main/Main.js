@@ -1,6 +1,6 @@
 import React from 'react';
 import './Main.css';
-import NavTab from "../NavTab/NavTab";
+import Header from "../Header/Header";
 import Promo from "../Promo/Promo";
 import AboutProject from "../AboutProject/AboutProject";
 
@@ -9,7 +9,7 @@ class Main extends React.Component {
   render() {
     return (
       <div className="page">
-        <NavTab />
+        <Header />
         <Promo />
         <AboutProject />
       </div>

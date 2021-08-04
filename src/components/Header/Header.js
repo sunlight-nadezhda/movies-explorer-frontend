@@ -1,20 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './NavTab.css';
+import './Header.css';
 import logoPath from '../../images/logo.svg';
 
-class NavTab extends React.Component {
+class Header extends React.Component {
 
   render() {
     return (
-      <nav className="nav-tab nav-tab_place_landing">
+      <nav className="header header_place_landing">
         <Link to="/">
           <img alt='Логотип' src={logoPath} />
         </Link>
-        <Link to="/signup" className="nav-tab__link">
+        <Link to="/signup" className="header__link">
           Регистрация
         </Link>
-        <Link to="/signin" className="nav-tab__button">
+        <Link to="/signin" className="header__button">
           Войти
         </Link>
       </nav>
@@ -22,4 +22,4 @@ class NavTab extends React.Component {
   }
 }
 
-export default NavTab;
+export default Header;
