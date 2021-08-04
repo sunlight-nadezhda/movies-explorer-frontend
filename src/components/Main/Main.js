@@ -3,6 +3,7 @@ import './Main.css';
 import Header from "../Header/Header";
 import Promo from "../Promo/Promo";
 import AboutProject from "../AboutProject/AboutProject";
+import Techs from "../Techs/Techs";
 
 class Main extends React.Component {
 
@@ -12,6 +13,7 @@ class Main extends React.Component {
         <Header />
         <Promo />
         <AboutProject />
+        <Techs />
       </div>
     );
   }

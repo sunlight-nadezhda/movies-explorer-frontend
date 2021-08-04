@@ -5,8 +5,8 @@ class AboutProject extends React.Component {
 
   render() {
     return (
-      <section className="about-project">
-        <h2 className="about-project__title">О проекте</h2>
+      <section className="section about-project">
+        <h2 className="section__title">О проекте</h2>
         <div className="about-project__description">
           <h3 className="about-project__description-tile">
             Дипломный проект включал 5 этапов
