@@ -1,13 +1,9 @@
 import React from 'react';
-import './Main.css';
+import './Movies.css';
 import Header from "../Header/Header";
-import Promo from "../Promo/Promo";
-import AboutProject from "../AboutProject/AboutProject";
-import Techs from "../Techs/Techs";
-import AboutMe from "../AboutMe/AboutMe";
 import Footer from "../Footer/Footer";
 
-class Main extends React.Component {
+class Movies extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,14 +17,10 @@ class Main extends React.Component {
         <Header
           loggedIn={this.state.loggedIn}
         />
-        <Promo />
-        <AboutProject />
-        <Techs />
-        <AboutMe />
         <Footer />
       </div>
     );
   }
 }
 
-export default Main;
+export default Movies;
