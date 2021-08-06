@@ -6,7 +6,7 @@ class SearchForm extends React.Component {
 
   render() {
     return (
-      <div className="search">
+      <section className="search">
         <form className="search__container">
             <label htmlFor="site-search">
               <div className="search__icon"></div>
@@ -16,7 +16,7 @@ class SearchForm extends React.Component {
             <FilterCheckbox />
           </form>
         <hr className="search__line" />
-      </div>
+      </section>
     );
   }
 }

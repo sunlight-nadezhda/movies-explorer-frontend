@@ -21,10 +21,12 @@ class Main extends React.Component {
         <Header
           loggedIn={this.state.loggedIn}
         />
-        <Promo />
-        <AboutProject />
-        <Techs />
-        <AboutMe />
+        <main>
+          <Promo />
+          <AboutProject />
+          <Techs />
+          <AboutMe />
+        </main>
         <Footer />
       </div>
     );

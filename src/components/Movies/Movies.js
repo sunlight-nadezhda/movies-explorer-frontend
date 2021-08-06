@@ -2,7 +2,9 @@ import React from 'react';
 import './Movies.css';
 import Header from "../Header/Header";
 import SearchForm from "../SearchForm/SearchForm";
+import Preloader from "../Preloader/Preloader";
 import Footer from "../Footer/Footer";
+import MoviesCardList from "../MoviesCardList/MoviesCardList";
 
 class Movies extends React.Component {
   constructor(props) {
@@ -18,7 +20,11 @@ class Movies extends React.Component {
         <Header
           loggedIn={this.state.loggedIn}
         />
-        <SearchForm />
+        <main>
+          <SearchForm />
+          <Preloader />
+          <MoviesCardList />
+        </main>
         <Footer />
       </div>
     );
