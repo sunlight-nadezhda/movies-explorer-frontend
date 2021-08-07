@@ -14,3 +14,9 @@
 .navigation__link_active {
   font-weight: 500;
 }
+
+@media (max-width: 1020px) {
+  .navigation {
+    display: none;
+  }
+}

@@ -49,3 +49,14 @@
   color: #000000;
   margin-left: 14px;
 }
+
+@media (max-width: 760px) {
+  .filter {
+    position: absolute;
+    bottom: -85px;
+    padding: 0;
+    left: 50%;
+    transform: translate(-50%);
+    border: none;
+  }
+}

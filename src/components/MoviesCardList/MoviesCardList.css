@@ -10,3 +10,24 @@
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 32px;
 }
+
+@media (max-width: 1020px) {
+  .card-list {
+    padding: 70px 30px 30px;
+  }
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 35px;
+    column-gap: 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  .card-list {
+    padding: 40px 10px 30px;
+  }
+  .cards {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+  }
+}

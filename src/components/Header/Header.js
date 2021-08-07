@@ -2,8 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import Auth from '../Auth/Auth';
-import Account from '../Account/Account';
-import Navigation from '../Navigation/Navigation';
+import NavTab from '../NavTab/NavTab';
 import logoPath from '../../images/logo.svg';
 
 class Header extends React.Component {
@@ -20,8 +19,7 @@ class Header extends React.Component {
         <Link to="/">
           <img alt='Логотип' src={logoPath} />
         </Link>
-        {this.state.loggedIn && <Navigation />}
-        {this.state.loggedIn ? <Account /> : <Auth />}
+        {this.state.loggedIn ? <NavTab /> : <Auth />}
       </header>
     );
   }

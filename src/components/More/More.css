@@ -13,3 +13,9 @@
   line-height: 15px;
   color: #000000;
 }
+
+@media (max-width: 760px) {
+  .more__button {
+    width: 240px;
+  }
+}
