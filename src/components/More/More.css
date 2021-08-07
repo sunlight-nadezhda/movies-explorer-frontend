@@ -1,0 +1,15 @@
+.more {
+  padding: 50px 0 80px;
+  text-align: center;
+}
+
+.more__button {
+  background-color: #fff;
+  border: 1px solid #E8E8E8;
+  width: 320px;
+  height: 36px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: #000000;
+}

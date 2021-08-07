@@ -26,9 +26,9 @@
 
 .card__image {
   width: 100%;
+  object-fit: cover;
   height: 200px;
-  background-image: url('../../images/movie-poster.jpg');
-  background-repeat: no-repeat;
+  display: block;
 }
 
 .card__footer {
@@ -41,6 +41,11 @@
   border-radius: 30px;
   width: 100px;
   height: 29px;
+  background: #F9F9F9;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 11px;
+  color: #000000;
 }
 
 .card__button_saved {
