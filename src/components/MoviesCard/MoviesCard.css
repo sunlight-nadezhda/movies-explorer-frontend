@@ -17,7 +17,7 @@
   color: #000000;
 }
 
-.card__time {
+.card__duration {
   font-weight: normal;
   font-size: 13px;
   line-height: 18px;
@@ -51,6 +51,12 @@
 .card__button_saved {
   background: #FF4062;
   background-image: url('../../images/check-mark.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.card__button_delete {
+  background-image: url('../../images/delete-mark.svg');
   background-repeat: no-repeat;
   background-position: center;
 }

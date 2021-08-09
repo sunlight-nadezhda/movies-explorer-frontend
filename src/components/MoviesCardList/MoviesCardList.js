@@ -2,7 +2,6 @@ import React from 'react';
 import './MoviesCardList.css';
 // import Preloader from "../Preloader/Preloader";
 import MoviesCard from '../MoviesCard/MoviesCard';
-import posterPath from '../../images/movie-poster.jpg';
 
 class MoviesCardList extends React.Component {
 
@@ -11,54 +10,13 @@ class MoviesCardList extends React.Component {
       <section className="card-list">
         {/* <Preloader /> */}
         <ul className="cards">
-          <MoviesCard
-            saved={true}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={true}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={false}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={false}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={false}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={true}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={true}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={false}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={false}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={false}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={true}
-            link={posterPath}
-          />
-          <MoviesCard
-            saved={false}
-            link={posterPath}
-          />
+          {this.props.cards.map((cardInfo) => (
+            <MoviesCard
+              card={cardInfo}
+              key={cardInfo._id}
+              isSavedMovies={this.props.isSavedMovies}
+            />
+          ))}
         </ul>
       </section>
     );

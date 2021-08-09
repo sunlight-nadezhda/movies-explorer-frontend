@@ -1,10 +1,9 @@
 import React from 'react';
-import './Movies.css';
+import './SavedMovies.css';
 import Header from "../Header/Header";
 import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import More from "../More/More";
 
 class Movies extends React.Component {
   constructor(props) {
@@ -26,7 +25,6 @@ class Movies extends React.Component {
             cards={this.props.cards}
             isSavedMovies={this.props.isSavedMovies}
           />
-          <More />
         </main>
         <Footer />
       </div>
