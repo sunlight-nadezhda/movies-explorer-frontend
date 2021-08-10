@@ -15,13 +15,13 @@ class Register extends React.Component {
         <h1 className="register__greeting">Добро пожаловать!</h1>
 
         <label htmlFor="register-name" className="register__label">Имя</label>
-        <input type="text" id="register-name" name="register-name" placeholder="Имя" className="register__input register__name-input" />
+        <input type="text" id="register-name" name="register-name" className="register__input register__name-input" />
 
         <label htmlFor="register-email" className="register__label">E-mail</label>
-        <input type="email" id="register-email" name="register-email" placeholder="E-mail" className="register__input register__email-input" />
+        <input type="email" id="register-email" name="register-email" className="register__input register__email-input" />
 
         <label htmlFor="register-pass" className="register__label">Пароль</label>
-        <input type="password" id="register-pass" name="register-pass" placeholder="Пароль" className="register__input register__pass-input" />
+        <input type="password" id="register-pass" name="register-pass" className="register__input register__pass-input" />
 
         <div className="register__error-message">Что-то пошло не так...</div>
 

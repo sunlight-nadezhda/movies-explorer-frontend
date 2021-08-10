@@ -7,6 +7,7 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import cards from '../../utils/cards';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
+import Login from '../Login/Login';
 
 class App extends React.Component {
   constructor() {
@@ -23,6 +24,9 @@ class App extends React.Component {
         <Switch>
           <Route path="/signup">
             <Register />
+          </Route>
+          <Route path="/signin">
+            <Login />
           </Route>
           <Route exact path="/">
             <Main
