@@ -17,12 +17,12 @@ class Profile extends React.Component {
             <form className="profile__container">
               <label htmlFor="profile-name" className="profile__label">
                 Имя
-                <input type="text" id="profile-name" name="profile-name" placeholder="Имя" className="profile__name-input" />
+                <input type="text" id="profile-name" name="profile-name" value="Виталий" placeholder="Имя" className="profile__name-input" />
               </label>
               <hr className="profile__line" />
               <label htmlFor="profile-email" className="profile__label">
                 E-mail
-                <input type="text" id="profile-email" name="profile-email" placeholder="Почта" className="profile__email-input" />
+                <input type="email" id="profile-email" name="profile-email" value="pochta@yandex.ru" placeholder="Почта" className="profile__email-input" />
               </label>
               <input type="submit" value="Редактировать" className="profile__edit-button" />
               <Link to="/signout" className="profile__link">Выйти из аккаунта</Link>

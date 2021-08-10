@@ -6,6 +6,7 @@ import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import cards from '../../utils/cards';
 import Profile from '../Profile/Profile';
+import Register from '../Register/Register';
 
 class App extends React.Component {
   constructor() {
@@ -20,6 +21,9 @@ class App extends React.Component {
     return (
       <div className="App">
         <Switch>
+          <Route path="/signup">
+            <Register />
+          </Route>
           <Route exact path="/">
             <Main
               loggedIn={false}
