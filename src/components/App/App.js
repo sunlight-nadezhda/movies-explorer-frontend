@@ -5,6 +5,7 @@ import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import cards from '../../utils/cards';
+import Profile from '../Profile/Profile';
 
 class App extends React.Component {
   constructor() {
@@ -36,6 +37,11 @@ class App extends React.Component {
               loggedIn={true}
               cards={this.state.savedCards}
               isSavedMovies={true}
+            />
+          </Route>
+          <Route path="/profile">
+            <Profile
+              loggedIn={true}
             />
           </Route>
         </Switch>
