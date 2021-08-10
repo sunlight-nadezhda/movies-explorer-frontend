@@ -8,6 +8,7 @@ import cards from '../../utils/cards';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
+import PageNotFound from '../PageNotFound/PageNotFound';
 
 class App extends React.Component {
   constructor() {
@@ -51,6 +52,9 @@ class App extends React.Component {
             <Profile
               loggedIn={true}
             />
+          </Route>
+          <Route path="*">
+            <PageNotFound />
           </Route>
         </Switch>
       </div>
