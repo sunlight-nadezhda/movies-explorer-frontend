@@ -18,6 +18,7 @@ class Movies extends React.Component {
       <div className="page">
         <Header
           loggedIn={this.state.loggedIn}
+          onOpenMenu={this.props.onOpenMenu}
         />
         <main>
           <SearchForm />

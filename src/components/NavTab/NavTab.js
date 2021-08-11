@@ -10,7 +10,7 @@ class NavTab extends React.Component {
       <>
         <Navigation />
         <Account />
-        <button className="menu-button"></button>
+        <button className="menu-button" onClick={this.props.onOpenMenu}></button>
       </>
     );
   }

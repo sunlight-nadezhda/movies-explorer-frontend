@@ -10,6 +10,7 @@ class Profile extends React.Component {
       <div className="page">
         <Header
           loggedIn={this.props.loggedIn}
+          onOpenMenu={this.props.onOpenMenu}
         />
         <main>
           <section className="profile">

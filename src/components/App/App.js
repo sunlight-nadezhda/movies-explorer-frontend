@@ -9,15 +9,25 @@ import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
 import PageNotFound from '../PageNotFound/PageNotFound';
+import Menu from '../Menu/Menu';
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
       cards: cards,
-      savedCards: cards.filter((item) => item.saved)
+      savedCards: cards.filter((item) => item.saved),
+      isMenuOpen: false
     };
   }
+
+  handleOpenMenu = () => {
+    this.setState({ isMenuOpen: true });
+  };
+
+  handleCloseMenu = () => {
+    this.setState({ isMenuOpen: false });
+  };
 
   render() {
     return (
@@ -39,6 +49,7 @@ class App extends React.Component {
               loggedIn={true}
               cards={this.state.cards}
               isSavedMovies={false}
+              onOpenMenu={this.handleOpenMenu}
             />
           </Route>
           <Route path="/saved-movies">
@@ -46,17 +57,24 @@ class App extends React.Component {
               loggedIn={true}
               cards={this.state.savedCards}
               isSavedMovies={true}
+              onOpenMenu={this.handleOpenMenu}
             />
           </Route>
           <Route path="/profile">
             <Profile
               loggedIn={true}
+              onOpenMenu={this.handleOpenMenu}
             />
           </Route>
           <Route path="*">
             <PageNotFound />
           </Route>
         </Switch>
+
+        <Menu
+          isOpen={this.state.isMenuOpen}
+          onCloseMenu={this.handleCloseMenu}
+        />
       </div>
     );
   }

@@ -19,7 +19,7 @@ class Header extends React.Component {
         <Link to="/">
           <img alt='Логотип' src={logoPath} />
         </Link>
-        {this.state.loggedIn ? <NavTab /> : <Auth />}
+        {this.state.loggedIn ? <NavTab onOpenMenu={this.props.onOpenMenu} /> : <Auth />}
       </header>
     );
   }

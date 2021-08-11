@@ -26,4 +26,8 @@
   .account {
     display: none;
   }
+  .account_menu {
+    display: flex;
+    margin-top: 100%;
+  }
 }
