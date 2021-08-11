@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './Footer.css';
 
 class Footer extends React.Component {
@@ -13,8 +12,10 @@ class Footer extends React.Component {
           <div className="footer__links">
             <a href="https://praktikum.yandex.ru/" className="footer__link" target="_blank"
           rel="noopener noreferrer">Яндекс.Практикум</a>
-            <Link to="#" className="footer__link">Github</Link>
-            <Link to="#" className="footer__link">Facebook</Link>
+            <a href="https://github.com/" className="footer__link" target="_blank"
+          rel="noopener noreferrer">Github</a>
+            <a href="https://www.facebook.com/" className="footer__link" target="_blank"
+          rel="noopener noreferrer">Facebook</a>
           </div>
         </div>
       </footer>
