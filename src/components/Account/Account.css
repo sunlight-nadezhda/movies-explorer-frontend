@@ -28,6 +28,12 @@
   }
   .account_menu {
     display: flex;
-    margin-top: 100%;
+    margin-top: 621px;
+  }
+}
+
+@media (max-width: 760px) {
+  .account_menu {
+    margin-top: 444px;
   }
 }

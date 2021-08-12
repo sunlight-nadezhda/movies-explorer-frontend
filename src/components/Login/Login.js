@@ -15,10 +15,10 @@ class Login extends React.Component {
         <h1 className="login__greeting">Рады видеть!</h1>
 
         <label htmlFor="login-email" className="login__label">E-mail</label>
-        <input type="email" id="login-email" name="login-email" className="login__input login__email-input" />
+        <input type="email" id="login-email" name="login-email" placeholder="E-mail" className="login__input login__email-input" required />
 
         <label htmlFor="login-pass" className="login__label">Пароль</label>
-        <input type="password" id="login-pass" name="login-pass" className="login__input login__pass-input" />
+        <input type="password" id="login-pass" name="login-pass" placeholder="Пароль" className="login__input login__pass-input" required />
 
         <div className="login__error-message login__error-message_hide">Что-то пошло не так...</div>
 
