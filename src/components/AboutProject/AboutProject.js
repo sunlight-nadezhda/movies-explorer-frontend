@@ -1,12 +1,13 @@
 import React from 'react';
 import './AboutProject.css';
+import SectionTitle from '../SectionTitle/SectionTitle';
 
 class AboutProject extends React.Component {
 
   render() {
     return (
-      <section className="section about-project">
-        <h2 className="section__title">О проекте</h2>
+      <section className="about-project">
+        <SectionTitle title="О проекте" />
         <div className="about-project__description">
           <div className="about-project__column">
             <h3 className="about-project__description-tile">

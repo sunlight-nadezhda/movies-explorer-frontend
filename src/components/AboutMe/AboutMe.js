@@ -1,5 +1,6 @@
 import React from 'react';
 import './AboutMe.css';
+import SectionTitle from '../SectionTitle/SectionTitle';
 import photoPath from '../../images/photo.jpg';
 import arrowPath from '../../images/arrow.svg';
 
@@ -8,7 +9,7 @@ class AboutMe extends React.Component {
   render() {
     return (
       <section className="section about-me">
-        <h2 className="section__title">Студент</h2>
+        <SectionTitle title="Студент" />
         <div className="about-me__description">
           <div className="about-me__text">
             <h3 className="about-me__name">Виталий</h3>

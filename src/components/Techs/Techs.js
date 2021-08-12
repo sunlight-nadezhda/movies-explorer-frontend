@@ -1,12 +1,13 @@
 import React from 'react';
 import './Techs.css';
+import SectionTitle from '../SectionTitle/SectionTitle';
 
 class Techs extends React.Component {
 
   render() {
     return (
-      <section className="section techs">
-        <h2 className="section__title">Технологии</h2>
+      <section className="techs">
+        <SectionTitle title="Технологии" />
         <h3 className="techs__name">7 технологий</h3>
         <p className="techs__description">На курсе веб-разработки мы освоили технологии, которые применили в дипломном проекте.</p>
         <div className="techs__technologies">
