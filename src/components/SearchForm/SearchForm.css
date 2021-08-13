@@ -51,6 +51,10 @@
   margin: 0 19px 0 auto;
 }
 
+.search__submit:hover {
+  cursor: pointer;
+}
+
 .search__line {
   margin: 69px 0 0;
   border-color: #E8E8E8;

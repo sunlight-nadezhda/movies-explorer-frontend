@@ -20,6 +20,10 @@
   transition: .5s;
 }
 
+.filter__label:hover {
+  cursor: pointer;
+}
+
 .filter__label::before {
   content: '';
   position: absolute;

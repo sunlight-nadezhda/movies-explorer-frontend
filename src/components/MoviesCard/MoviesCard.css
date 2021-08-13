@@ -48,6 +48,10 @@
   color: #000000;
 }
 
+.card__button {
+  cursor: pointer;
+}
+
 .card__button_saved {
   background: #FF4062;
   background-image: url('../../images/check-mark.svg');

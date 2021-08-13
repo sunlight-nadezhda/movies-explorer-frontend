@@ -61,11 +61,16 @@
   height: 45px;
   width: 100%;
   background: #000000;
+  border: none;
   border-radius: 3px;
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
   color: #FFFFFF;
+}
+
+.register__sign-button:hover {
+  cursor: pointer;
 }
 
 .register__login-block {
