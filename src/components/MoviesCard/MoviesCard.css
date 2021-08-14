@@ -1,0 +1,66 @@
+.card {
+  background: #FDFDFD;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+}
+
+.card__header {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card__name {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.card__duration {
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #A0A0A0;
+}
+
+.card__image {
+  width: 100%;
+  object-fit: cover;
+  height: 200px;
+  display: block;
+}
+
+.card__footer {
+  padding: 18px;
+  text-align: center;
+}
+
+.card__button {
+  border: none;
+  border-radius: 30px;
+  width: 100px;
+  height: 29px;
+  background: #F9F9F9;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 11px;
+  color: #000000;
+}
+
+.card__button {
+  cursor: pointer;
+}
+
+.card__button_saved {
+  background: #FF4062;
+  background-image: url('../../images/check-mark.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.card__button_delete {
+  background-image: url('../../images/delete-mark.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}

@@ -1,0 +1,39 @@
+.account {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.account__text {
+  color: #000;
+  margin-right: 17px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.account__icon {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  background-image: url('../../images/icon-account.svg');
+  width: 26px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@media (max-width: 1280px) {
+  .account {
+    display: none;
+  }
+  .account_menu {
+    display: flex;
+    margin-top: 621px;
+  }
+}
+
+@media (max-width: 760px) {
+  .account_menu {
+    margin-top: 444px;
+  }
+}

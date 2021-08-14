@@ -1,0 +1,117 @@
+.register {
+  padding: 70px;
+  margin: 0 auto;
+  width: 396px;
+}
+
+.register__greeting {
+  margin: 40px 0 0;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #000000;
+}
+
+.register__label {
+  display: block;
+  margin-top: 24px;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+  color: #A0A0A0;
+}
+
+.register__label:first-of-type {
+  margin-top: 40px;
+}
+
+.register__input {
+  display: block;
+  width: 100%;
+  padding: 5px 0 10px;
+  border: none;
+  border-bottom: 1px solid #E8E8E8;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+}
+
+.register__input:focus {
+  outline: none;
+  border-bottom-color: #000;
+  font-weight: 500;
+}
+
+.register__pass-input {
+  color: #FF4062;
+}
+
+.register__error-message {
+  margin-top: 6px;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+  color: #FF4062;
+}
+
+.register__sign-button {
+  margin-top: 134px;
+  display: block;
+  height: 45px;
+  width: 100%;
+  background: #000000;
+  border: none;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFFFFF;
+}
+
+.register__sign-button:hover {
+  cursor: pointer;
+}
+
+.register__login-block {
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.register__login-text {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  color: #A0A0A0;
+}
+
+.register__login-link {
+  margin-left: 6px;
+  text-decoration: none;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+}
+
+@media (max-width: 760px) {
+  .register {
+    padding: 56px 30px 30px;
+    width: 260px;
+  }
+  .register__sign-button {
+    margin-top: 222px;
+  }
+  .register__login-text {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .register__login-link {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .logo-inAuth {
+    display: flex;
+    justify-content: center;
+  }
+}
