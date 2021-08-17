@@ -9,7 +9,7 @@ const SearchForm = () => {
         <label htmlFor="site-search">
           <div className="search__icon"></div>
         </label>
-        <input type="search" id="site-search" name="site-search" placeholder="Фильм" className="search__input" />
+        <input type="search" id="site-search" name="site-search" placeholder="Фильм" className="search__input" required />
         <input type="submit" value="" className="search__submit" />
         <FilterCheckbox />
       </form>
