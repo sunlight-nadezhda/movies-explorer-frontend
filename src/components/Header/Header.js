@@ -5,24 +5,15 @@ import Auth from '../Auth/Auth';
 import NavTab from '../NavTab/NavTab';
 import logoPath from '../../images/logo.svg';
 
-class Header extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: props.loggedIn,
-    };
-  }
-
-  render() {
-    return (
-      <header className={`header${this.state.loggedIn ? '' : ' header_landing'}`}>
-        <Link to="/">
-          <img alt='Логотип' src={logoPath} />
-        </Link>
-        {this.state.loggedIn ? <NavTab onOpenMenu={this.props.onOpenMenu} /> : <Auth />}
-      </header>
-    );
-  }
+const Header = (props) => {
+  return (
+    <header className={`header${props.loggedIn ? '' : ' header_landing'}`}>
+      <Link to="/">
+        <img alt='Логотип' src={logoPath} />
+      </Link>
+      {props.loggedIn ? <NavTab onOpenMenu={props.onOpenMenu} /> : <Auth />}
+    </header>
+  );
 }
 
 export default Header;

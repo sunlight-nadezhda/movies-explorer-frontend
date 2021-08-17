@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Main from '../Main/Main';
@@ -11,73 +11,74 @@ import Login from '../Login/Login';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import Menu from '../Menu/Menu';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      cards: cards,
-      savedCards: cards.filter((item) => item.saved),
-      isMenuOpen: false
-    };
-  }
+const App = () => {
+  // const [cards, setCards] = useState(cards);
+  const [savedCards, setSavedCards] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  handleOpenMenu = () => {
-    this.setState({ isMenuOpen: true });
+  const handleOpenMenu = () => {
+    setIsMenuOpen(true);
   };
 
-  handleCloseMenu = () => {
-    this.setState({ isMenuOpen: false });
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
   };
 
-  render() {
-    return (
-      <div className="App">
-        <Switch>
-          <Route path="/signup">
-            <Register />
-          </Route>
-          <Route path="/signin">
-            <Login />
-          </Route>
-          <Route exact path="/">
-            <Main
-              loggedIn={false}
-            />
-          </Route>
-          <Route path="/movies">
-            <Movies
-              loggedIn={true}
-              cards={this.state.cards}
-              isSavedMovies={false}
-              onOpenMenu={this.handleOpenMenu}
-            />
-          </Route>
-          <Route path="/saved-movies">
-            <SavedMovies
-              loggedIn={true}
-              cards={this.state.savedCards}
-              isSavedMovies={true}
-              onOpenMenu={this.handleOpenMenu}
-            />
-          </Route>
-          <Route path="/profile">
-            <Profile
-              loggedIn={true}
-              onOpenMenu={this.handleOpenMenu}
-            />
-          </Route>
-          <Route path="*">
-            <PageNotFound />
-          </Route>
-        </Switch>
+  const selectSavedCards = () => {
+    setSavedCards(cards.filter((item) => item.saved));
+  };
 
-        <Menu
-          isOpen={this.state.isMenuOpen}
-          onCloseMenu={this.handleCloseMenu}
-        />
-      </div>
-    );
-  }
+  useEffect(() => {
+    selectSavedCards();
+  }, []);
+
+  return (
+    <div className="App">
+      <Switch>
+        <Route path="/signup">
+          <Register />
+        </Route>
+        <Route path="/signin">
+          <Login />
+        </Route>
+        <Route exact path="/">
+          <Main
+            loggedIn={false}
+          />
+        </Route>
+        <Route path="/movies">
+          <Movies
+            loggedIn={true}
+            cards={cards}
+            isSavedMovies={false}
+            onOpenMenu={handleOpenMenu}
+          />
+        </Route>
+        <Route path="/saved-movies">
+          <SavedMovies
+            loggedIn={true}
+            cards={savedCards}
+            isSavedMovies={true}
+            onOpenMenu={handleOpenMenu}
+          />
+        </Route>
+        <Route path="/profile">
+          <Profile
+            loggedIn={true}
+            onOpenMenu={handleOpenMenu}
+          />
+        </Route>
+        <Route path="*">
+          <PageNotFound />
+        </Route>
+      </Switch>
+
+      <Menu
+        isOpen={isMenuOpen}
+        onCloseMenu={handleCloseMenu}
+      />
+    </div>
+  );
 }
 
 export default App;
