@@ -28,12 +28,16 @@
   }
   .account_menu {
     display: flex;
-    margin-top: 621px;
+    position: fixed;
+    bottom: 92px;
+    right: 260px;
+    transform: translate(50%);
   }
 }
 
 @media (max-width: 760px) {
   .account_menu {
-    margin-top: 444px;
+    right: 50%;
+    bottom: 48px;
   }
 }
