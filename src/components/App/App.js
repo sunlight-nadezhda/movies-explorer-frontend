@@ -10,12 +10,14 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import Menu from '../Menu/Menu';
-import api from '../../utils/api';
+import MoviesApi from '../../utils/MoviesApi';
 
 const App = () => {
-  // const [cards, setCards] = useState(cards);
+  const [films, setfilms] = useState([]);
   const [savedCards, setSavedCards] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayCards, setDisplayCards] = useState(false);
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -30,8 +32,12 @@ const App = () => {
   };
 
   const handleGetFilms = () => {
-    api.getFilms()
+    setIsLoading(true);
+    MoviesApi.getFilms()
       .then(dataFilms => {
+        setIsLoading(false);
+        setfilms(dataFilms);
+        setDisplayCards(true);
         console.log(dataFilms);
       })
       .catch((err) => {
@@ -60,10 +66,12 @@ const App = () => {
         <Route path="/movies">
           <Movies
             loggedIn={true}
-            cards={cards}
+            films={films}
             isSavedMovies={false}
             onOpenMenu={handleOpenMenu}
             onGetFilms={handleGetFilms}
+            isLoading={isLoading}
+            displayCards={displayCards}
           />
         </Route>
         <Route path="/saved-movies">
