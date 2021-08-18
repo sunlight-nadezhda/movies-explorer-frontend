@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Register.css';
 import logoPath from '../../images/logo.svg';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 const Register = () => {
   return (
@@ -21,7 +22,7 @@ const Register = () => {
       <label htmlFor="register-pass" className="register__label">Пароль</label>
       <input type="password" id="register-pass" name="register-pass" placeholder="Пароль" className="register__input register__pass-input" required />
 
-      <div className="register__error-message">Что-то пошло не так...</div>
+      <ErrorMessage text="Что-то пошло не так..." />
 
       <input type="submit" value="Зарегистрироваться" className="register__sign-button" />
 
