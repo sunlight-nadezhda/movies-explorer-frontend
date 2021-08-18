@@ -10,6 +10,7 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import Menu from '../Menu/Menu';
+import api from '../../utils/api';
 
 const App = () => {
   // const [cards, setCards] = useState(cards);
@@ -26,6 +27,16 @@ const App = () => {
 
   const selectSavedCards = () => {
     setSavedCards(cards.filter((item) => item.saved));
+  };
+
+  const handleGetFilms = () => {
+    api.getFilms()
+      .then(dataFilms => {
+        console.log(dataFilms);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -52,6 +63,7 @@ const App = () => {
             cards={cards}
             isSavedMovies={false}
             onOpenMenu={handleOpenMenu}
+            onGetFilms={handleGetFilms}
           />
         </Route>
         <Route path="/saved-movies">

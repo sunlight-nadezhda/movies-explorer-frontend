@@ -3,7 +3,7 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
-const SearchForm = () => {
+const SearchForm = (props) => {
   const [searchedFilm, setSearchedFilm] = useState('');
   const [showError, setShowError] = useState(false);
 
@@ -13,6 +13,9 @@ const SearchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!!searchedFilm) props.onGetFilms();
+
     setShowError(!searchedFilm);
   };
 
