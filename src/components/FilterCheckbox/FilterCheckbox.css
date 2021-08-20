@@ -15,7 +15,7 @@
   position: relative;
   width: 36px;
   height: 20px;
-  background: #2BE080;
+  background: #A0A0A0;
   border-radius: 20px;
   transition: .5s;
 }
@@ -32,17 +32,17 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  left: 18px;
+  left: 2px;
   top: 2px;
   transition: .5s;
 }
 
-.filter__input:checked + .filter__label {
-  background: #A0A0A0;
+.filter__input:checked+.filter__label {
+  background: #2BE080;
 }
 
-.filter__input:checked + .filter__label::before {
-  left: 2px;
+.filter__input:checked+.filter__label::before {
+  left: 18px;
 }
 
 .filter__text {

@@ -31,12 +31,18 @@ const App = () => {
     setSavedCards(cards.filter((item) => item.saved));
   };
 
-  const handleGetFilms = () => {
+  const handleGetFilms = (isBeatFilm) => {
     setIsLoading(true);
     MoviesApi.getFilms()
       .then(dataFilms => {
+        console.log(isBeatFilm);
+        if (isBeatFilm) {
+          const beatFilms = dataFilms.filter(film => film.duration <= 40);
+          setfilms(beatFilms);
+        } else {
+          setfilms(dataFilms);
+        }
         setIsLoading(false);
-        setfilms(dataFilms);
         setDisplayCards(true);
         console.log(dataFilms);
       })

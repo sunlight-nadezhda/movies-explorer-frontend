@@ -6,6 +6,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 const SearchForm = (props) => {
   const [searchedFilm, setSearchedFilm] = useState('');
   const [showError, setShowError] = useState(false);
+  const [isBeatFilm, setIsBeatFilm] = useState(true);
 
   const getSearchedFilm = (e) => {
     setSearchedFilm(e.target.value);
@@ -14,7 +15,7 @@ const SearchForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!!searchedFilm) props.onGetFilms();
+    if (!!searchedFilm) props.onGetFilms(isBeatFilm);
 
     setShowError(!searchedFilm);
   };
@@ -31,7 +32,7 @@ const SearchForm = (props) => {
         </label>
         <input type="search" id="site-search" name="site-search" value={searchedFilm} placeholder="Фильм" className="search__input" onChange={getSearchedFilm} required />
         <input type="submit" value="" className="search__submit" />
-        <FilterCheckbox />
+        <FilterCheckbox setIsBeatFilm={setIsBeatFilm} />
       </form>
       <ErrorMessage text="Нужно ввести ключевое слово" showError={showError} />
       <hr className="search__line" />
