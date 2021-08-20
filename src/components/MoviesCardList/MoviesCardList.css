@@ -10,6 +10,11 @@
   grid-gap: 32px;
 }
 
+.nothing-found {
+  margin: 0;
+  text-align: center;
+}
+
 @media (max-width: 1020px) {
   .card-list {
     padding: 70px 30px 30px;

@@ -31,17 +31,16 @@ const App = () => {
     setSavedCards(cards.filter((item) => item.saved));
   };
 
-  const handleGetFilms = (isBeatFilm) => {
+  const handleGetFilms = (isBeatFilm, keyWord) => {
     setIsLoading(true);
     MoviesApi.getFilms()
       .then(dataFilms => {
-        console.log(isBeatFilm);
-        if (isBeatFilm) {
-          const beatFilms = dataFilms.filter(film => film.duration <= 40);
-          setfilms(beatFilms);
-        } else {
-          setfilms(dataFilms);
-        }
+        const byTitle = film => film.nameRU.toLowerCase().includes(keyWord.toLowerCase());
+        const byDuration = film => film.duration <= 40;
+        setfilms(isBeatFilm
+          ? dataFilms.filter(byDuration).filter(byTitle)
+          : dataFilms.filter(byTitle)
+        );
         setIsLoading(false);
         setDisplayCards(true);
         console.log(dataFilms);

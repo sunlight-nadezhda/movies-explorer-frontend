@@ -7,15 +7,16 @@ const MoviesCardList = (props) => {
   return (
     <section className="card-list">
       {props.isLoading ? <Preloader /> :
-        <ul className={`cards ${props.displayCards ? 'show-cards' : 'hide-block'}`}>
-          {props.films.map((filmInfo) => (
-            <MoviesCard
-              film={filmInfo}
-              key={filmInfo.id}
-              isSavedMovies={props.isSavedMovies}
-            />
-          ))}
-        </ul>
+        props.films.length > 0 ?
+          <ul className={`cards ${props.displayCards ? 'show-cards' : 'hide-block'}`}>
+            {props.films.map((filmInfo) => (
+                <MoviesCard
+                  film={filmInfo}
+                  key={filmInfo.id}
+                  isSavedMovies={props.isSavedMovies}
+                />
+              ))}
+          </ul> : <p className="nothing-found">Ничего не найдено</p>
       }
     </section>
   );
