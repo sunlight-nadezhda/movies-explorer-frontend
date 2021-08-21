@@ -18,6 +18,8 @@ const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [displayCards, setDisplayCards] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [wasRequest, setWasRequest] = useState(false);
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -37,15 +39,18 @@ const App = () => {
       .then(dataFilms => {
         const byTitle = film => film.nameRU.toLowerCase().includes(keyWord.toLowerCase());
         const byDuration = film => film.duration <= 40;
-        setfilms(isBeatFilm
+        const selectedFilms = isBeatFilm
           ? dataFilms.filter(byDuration).filter(byTitle)
-          : dataFilms.filter(byTitle)
-        );
+          : dataFilms.filter(byTitle);
+        setfilms(selectedFilms);
+        localStorage.setItem('selectedFilms', JSON.stringify(selectedFilms));
         setIsLoading(false);
         setDisplayCards(true);
+        setWasRequest(true);
         console.log(dataFilms);
       })
       .catch((err) => {
+        setShowError(true);
         console.log(err);
       });
   };
@@ -77,6 +82,8 @@ const App = () => {
             onGetFilms={handleGetFilms}
             isLoading={isLoading}
             displayCards={displayCards}
+            showError={showError}
+            wasRequest={wasRequest}
           />
         </Route>
         <Route path="/saved-movies">

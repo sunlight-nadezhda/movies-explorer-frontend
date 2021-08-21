@@ -21,6 +21,8 @@ const Movies = (props) => {
           isSavedMovies={props.isSavedMovies}
           displayCards={props.displayCards}
           isLoading={props.isLoading}
+          showError={props.showError}
+          wasRequest={props.wasRequest}
         />
         <More displayBlock={displayMore} />
       </main>

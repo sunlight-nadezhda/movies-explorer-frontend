@@ -21,13 +21,19 @@
   color: #000000;
 }
 
-.not-found__link-back {
+.not-found__button-back {
   margin-top: 184px;
-  text-decoration: none;
   font-weight: normal;
   font-size: 14px;
   line-height: 17px;
   color: #000000;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+
+.not-found__button-back:hover {
+  cursor: pointer;
 }
 
 @media (max-width: 760px) {
