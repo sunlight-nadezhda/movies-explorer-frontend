@@ -20,6 +20,8 @@ const App = () => {
   const [displayCards, setDisplayCards] = useState(false);
   const [showError, setShowError] = useState(false);
   const [wasRequest, setWasRequest] = useState(false);
+  const [visibleСards, setVisibleCards] = useState([]);
+  const [displayMore, setDisplayMore] = useState(false);
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -44,6 +46,7 @@ const App = () => {
           : dataFilms.filter(byTitle);
         setfilms(selectedFilms);
         localStorage.setItem('selectedFilms', JSON.stringify(selectedFilms));
+        setVisibleCards(selectedFilms.filter((v, k) => k < 3));
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -54,6 +57,14 @@ const App = () => {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    if (visibleСards.length && films.length && visibleСards[visibleСards.length - 1].id !== films[films.length - 1].id) {
+      setDisplayMore(true);
+    } else {
+      setDisplayMore(false);
+    }
+  }, [visibleСards, films]);
 
   useEffect(() => {
     selectSavedCards();
@@ -76,7 +87,6 @@ const App = () => {
         <Route path="/movies">
           <Movies
             loggedIn={true}
-            films={films}
             isSavedMovies={false}
             onOpenMenu={handleOpenMenu}
             onGetFilms={handleGetFilms}
@@ -84,6 +94,8 @@ const App = () => {
             displayCards={displayCards}
             showError={showError}
             wasRequest={wasRequest}
+            visibleСards={visibleСards}
+            displayMore={displayMore}
           />
         </Route>
         <Route path="/saved-movies">

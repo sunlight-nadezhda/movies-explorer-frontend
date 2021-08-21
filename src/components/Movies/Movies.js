@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Movies.css';
 import Header from "../Header/Header";
 import SearchForm from "../SearchForm/SearchForm";
@@ -7,7 +7,6 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import More from "../More/More";
 
 const Movies = (props) => {
-  const [displayMore, setDisplayMore] = useState(false);
   return (
     <div className="page">
       <Header
@@ -17,14 +16,14 @@ const Movies = (props) => {
       <main>
         <SearchForm onGetFilms={props.onGetFilms} />
         <MoviesCardList
-          films={props.films}
           isSavedMovies={props.isSavedMovies}
           displayCards={props.displayCards}
           isLoading={props.isLoading}
           showError={props.showError}
           wasRequest={props.wasRequest}
+          visibleСards={props.visibleСards}
         />
-        <More displayBlock={displayMore} />
+        <More displayBlock={props.displayMore} />
       </main>
       <Footer />
     </div>

@@ -8,9 +8,9 @@ const MoviesCardList = (props) => {
   return (
     <section className="card-list">
       {props.isLoading ? <Preloader /> :
-        props.films.length > 0 ?
+        props.visibleСards.length > 0 ?
           <ul className={`cards ${props.displayCards ? 'show-cards' : 'hide-block'}`}>
-            {props.films.map((filmInfo) => (
+            {props.visibleСards.map((filmInfo) => (
               <MoviesCard
                 film={filmInfo}
                 key={filmInfo.id}
