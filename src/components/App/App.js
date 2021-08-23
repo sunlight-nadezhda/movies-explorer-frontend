@@ -22,6 +22,7 @@ const App = () => {
   const [wasRequest, setWasRequest] = useState(false);
   const [visibleСards, setVisibleCards] = useState([]);
   const [displayMore, setDisplayMore] = useState(false);
+  const [numberCards, setNumberCards] = useState({});
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -46,7 +47,7 @@ const App = () => {
           : dataFilms.filter(byTitle);
         setfilms(selectedFilms);
         localStorage.setItem('selectedFilms', JSON.stringify(selectedFilms));
-        setVisibleCards(selectedFilms.filter((v, k) => k < 3));
+        setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -58,6 +59,27 @@ const App = () => {
       });
   };
 
+  const handleActualResize = (e) => {
+    const screenWidth = e.target.screen.width;
+    console.log(screenWidth);
+    if (screenWidth < 481) {
+      return {
+        maxFirstShowCards: 5,
+        numberAdd: 2,
+      };
+    } else if (screenWidth < 1020) {
+      return {
+        maxFirstShowCards: 8,
+        numberAdd: 2,
+      };
+    } else {
+      return {
+        maxFirstShowCards: 12,
+        numberAdd: 3,
+      };
+    }
+  };
+
   useEffect(() => {
     if (visibleСards.length && films.length && visibleСards[visibleСards.length - 1].id !== films[films.length - 1].id) {
       setDisplayMore(true);
@@ -65,6 +87,20 @@ const App = () => {
       setDisplayMore(false);
     }
   }, [visibleСards, films]);
+
+  useEffect(() => {
+    let resizeTimeout;
+    const resizeThrottler = (e) => {
+      if (!resizeTimeout) {
+        resizeTimeout = setTimeout(() => {
+          resizeTimeout = null;
+          setNumberCards(handleActualResize(e));
+        }, 67);
+      }
+    };
+
+    window.addEventListener('resize', resizeThrottler);
+  });
 
   useEffect(() => {
     selectSavedCards();
