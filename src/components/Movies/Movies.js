@@ -23,7 +23,7 @@ const Movies = (props) => {
           wasRequest={props.wasRequest}
           visibleСards={props.visibleСards}
         />
-        <More displayBlock={props.displayMore} />
+        <More displayBlock={props.displayMore} onAddCards={props.onAddCards} />
       </main>
       <Footer />
     </div>

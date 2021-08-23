@@ -22,7 +22,7 @@ const App = () => {
   const [wasRequest, setWasRequest] = useState(false);
   const [visibleСards, setVisibleCards] = useState([]);
   const [displayMore, setDisplayMore] = useState(false);
-  const [numberCards, setNumberCards] = useState({});
+  const [numberCards, setNumberCards] = useState(null);
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -38,7 +38,19 @@ const App = () => {
 
   const handleGetFilms = (isBeatFilm, keyWord) => {
     setIsLoading(true);
-    MoviesApi.getFilms()
+    let numberCards;
+    if (!numberCards) {
+      numberCards = handleActualResize();
+      setNumberCards(numberCards);
+    }
+    // setNumberCards((numberCards) => {
+    //   if (!numberCards) {
+    //     return handleActualResize();
+    //   }
+    // });
+    // const localFilms = localStorage.getItem('selectedFilms');
+    // if (numberCards) {
+      MoviesApi.getFilms()
       .then(dataFilms => {
         const byTitle = film => film.nameRU.toLowerCase().includes(keyWord.toLowerCase());
         const byDuration = film => film.duration <= 40;
@@ -47,20 +59,35 @@ const App = () => {
           : dataFilms.filter(byTitle);
         setfilms(selectedFilms);
         localStorage.setItem('selectedFilms', JSON.stringify(selectedFilms));
+        console.log('numberCards fetch ', numberCards);
         setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
-        console.log(dataFilms);
+        console.log('dataFilms ', dataFilms);
       })
       .catch((err) => {
         setShowError(true);
         console.log(err);
       });
+   // } // else {
+    //   setfilms(localFilms);
+    //   console.log('numberCards local ', numberCards);
+    //   setVisibleCards(JSON.parse(localFilms).filter((v, k) => k < numberCards.maxFirstShowCards));
+    //   setIsLoading(false);
+    //   setDisplayCards(true);
+    //   setWasRequest(true);
+    //   console.log('localFilms ', JSON.parse(localFilms));
+    // }
   };
 
   const handleActualResize = (e) => {
-    const screenWidth = e.target.screen.width;
+    let screenWidth;
+    if (e) {
+      screenWidth = e.target.screen.width;
+    } else {
+      screenWidth = window.screen.width;
+    }
     console.log(screenWidth);
     if (screenWidth < 481) {
       return {
@@ -77,6 +104,13 @@ const App = () => {
         maxFirstShowCards: 12,
         numberAdd: 3,
       };
+    }
+  };
+
+  const handleAddMoreByClick = () => {
+    console.log(films.length);
+    if (films.length) {
+      setVisibleCards(films.filter((v, k) => k < visibleСards.length + numberCards.numberAdd));
     }
   };
 
@@ -100,6 +134,10 @@ const App = () => {
     };
 
     window.addEventListener('resize', resizeThrottler);
+
+    return () => {
+      window.removeEventListener('resize', resizeThrottler);
+    };
   });
 
   useEffect(() => {
@@ -132,6 +170,7 @@ const App = () => {
             wasRequest={wasRequest}
             visibleСards={visibleСards}
             displayMore={displayMore}
+            onAddCards={handleAddMoreByClick}
           />
         </Route>
         <Route path="/saved-movies">
