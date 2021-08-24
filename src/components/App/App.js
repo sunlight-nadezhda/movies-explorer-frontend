@@ -4,13 +4,14 @@ import './App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
-import cards from '../../utils/cards';
+// import cards from '../../utils/cards';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import Menu from '../Menu/Menu';
-import MoviesApi from '../../utils/MoviesApi';
+import moviesApi from '../../utils/MoviesApi';
+import api from '../../utils/MainApi';
 
 const App = () => {
   const [films, setfilms] = useState([]);
@@ -32,9 +33,9 @@ const App = () => {
     setIsMenuOpen(false);
   };
 
-  const selectSavedCards = () => {
-    setSavedCards(cards.filter((item) => item.saved));
-  };
+  // const selectSavedCards = () => {
+  //   setSavedCards(cards.filter((item) => item.saved));
+  // };
 
   const handleGetFilms = (isBeatFilm, keyWord) => {
     setIsLoading(true);
@@ -43,14 +44,8 @@ const App = () => {
       numberCards = handleActualResize();
       setNumberCards(numberCards);
     }
-    // setNumberCards((numberCards) => {
-    //   if (!numberCards) {
-    //     return handleActualResize();
-    //   }
-    // });
     // const localFilms = localStorage.getItem('selectedFilms');
-    // if (numberCards) {
-      MoviesApi.getFilms()
+    moviesApi.getFilms()
       .then(dataFilms => {
         const byTitle = film => film.nameRU.toLowerCase().includes(keyWord.toLowerCase());
         const byDuration = film => film.duration <= 40;
@@ -70,7 +65,7 @@ const App = () => {
         setShowError(true);
         console.log(err);
       });
-   // } // else {
+    // } // else {
     //   setfilms(localFilms);
     //   console.log('numberCards local ', numberCards);
     //   setVisibleCards(JSON.parse(localFilms).filter((v, k) => k < numberCards.maxFirstShowCards));
@@ -81,13 +76,8 @@ const App = () => {
     // }
   };
 
-  const handleActualResize = (e) => {
-    let screenWidth;
-    if (e) {
-      screenWidth = e.target.screen.width;
-    } else {
-      screenWidth = window.screen.width;
-    }
+  const handleActualResize = () => {
+    const screenWidth = window.screen.width;
     console.log(screenWidth);
     if (screenWidth < 481) {
       return {
@@ -114,6 +104,38 @@ const App = () => {
     }
   };
 
+  const handleSaveFilm = (film) => {
+    setIsLoading(true);
+    api.saveFilm(film)
+      .then(dataFilm => {
+        setSavedCards([...savedCards, dataFilm]);
+        setIsLoading(false);
+        setDisplayCards(true);
+        setWasRequest(true);
+        console.log('dataFilm ', dataFilm);
+      })
+      .catch((err) => {
+        setShowError(true);
+        console.log(err);
+      });
+  };
+
+  const handleDeleteFilm = (film) => {
+    setIsLoading(true);
+    api.deleteFilm(film._id)
+      .then(dataFilm => {
+        setSavedCards((state) => state.filter((c) => c._id !== film._id));
+        setIsLoading(false);
+        setDisplayCards(true);
+        setWasRequest(true);
+        console.log('dataFilm ', dataFilm);
+      })
+      .catch((err) => {
+        setShowError(true);
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     if (visibleСards.length && films.length && visibleСards[visibleСards.length - 1].id !== films[films.length - 1].id) {
       setDisplayMore(true);
@@ -124,11 +146,11 @@ const App = () => {
 
   useEffect(() => {
     let resizeTimeout;
-    const resizeThrottler = (e) => {
+    const resizeThrottler = () => {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          setNumberCards(handleActualResize(e));
+          setNumberCards(handleActualResize());
         }, 67);
       }
     };
@@ -140,9 +162,9 @@ const App = () => {
     };
   });
 
-  useEffect(() => {
-    selectSavedCards();
-  }, []);
+  // useEffect(() => {
+  //   selectSavedCards();
+  // }, []);
 
   return (
     <div className="App">
@@ -171,6 +193,8 @@ const App = () => {
             visibleСards={visibleСards}
             displayMore={displayMore}
             onAddCards={handleAddMoreByClick}
+            onSaveFilm={handleSaveFilm}
+            onDeleteFilm={handleDeleteFilm}
           />
         </Route>
         <Route path="/saved-movies">

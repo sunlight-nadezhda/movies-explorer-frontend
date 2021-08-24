@@ -15,6 +15,8 @@ const MoviesCardList = (props) => {
                 film={filmInfo}
                 key={filmInfo.id}
                 isSavedMovies={props.isSavedMovies}
+                onSaveFilm={props.onSaveFilm}
+                onDeleteFilm={props.onDeleteFilm}
               />
             ))}
           </ul> : props.showError
