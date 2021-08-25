@@ -11,6 +11,7 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import Menu from '../Menu/Menu';
 import moviesApi from '../../utils/MoviesApi';
 import api from '../../utils/MainApi';
+import { CurrentUserContext } from '../../utils/CurrentUserContext';
 
 const App = () => {
   const [films, setfilms] = useState([]);
@@ -24,6 +25,8 @@ const App = () => {
   const [displayMore, setDisplayMore] = useState(false);
   const [numberCards, setNumberCards] = useState(null);
   const [errorText, setErrorText] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
 
   const handleOpenMenu = () => {
@@ -103,11 +106,56 @@ const App = () => {
   };
 
   const onRegister = (userData) => {
+    setLoggedIn(true);
     api.register(userData)
       .then((response) => {
         if (response) {
           history.push("/movies");
         }
+      })
+      .catch((err) => {
+        setShowError(true);
+        setErrorText(err.message);
+        console.log(err);
+      });
+  };
+
+  const onLogin = (userData) => {
+    api.authorize(userData)
+      .then((response) => {
+        if (response) {
+          setLoggedIn(true);
+          history.push("/movies");
+        }
+      })
+      .catch((err) => {
+        setShowError(true);
+        setErrorText(err.message);
+        console.log(err);
+      });
+  };
+
+  const onSignOut = () => {
+    console.log(loggedIn);
+    if (!loggedIn) {
+      api.logOut()
+        .then((response) => {
+          if (response) {
+            setLoggedIn(false);
+            setCurrentUser(null);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleEditProfile = (data) => {
+    setIsLoading(true);
+    api.editProfile(data)
+      .then((userData) => {
+        setIsLoading(false);
+        setCurrentUser(userData);
       })
       .catch((err) => {
         setShowError(true);
@@ -177,65 +225,73 @@ const App = () => {
   });
 
   return (
-    <div className="App">
-      <Switch>
-        <Route path="/signup">
-          <Register
-            onRegister={onRegister}
-            showError={showError}
-            errorText={errorText}
-          />
-        </Route>
-        <Route path="/signin">
-          <Login />
-        </Route>
-        <Route exact path="/">
-          <Main
-            loggedIn={false}
-          />
-        </Route>
-        <Route path="/movies">
-          <Movies
-            loggedIn={true}
-            isSavedMovies={false}
-            onOpenMenu={handleOpenMenu}
-            onGetFilms={handleGetFilms}
-            isLoading={isLoading}
-            displayCards={displayCards}
-            showError={showError}
-            errorText={errorText}
-            wasRequest={wasRequest}
-            visibleСards={visibleСards}
-            displayMore={displayMore}
-            onAddCards={handleAddMoreByClick}
-            onSaveFilm={handleSaveFilm}
-            onDeleteFilm={handleDeleteFilm}
-          />
-        </Route>
-        <Route path="/saved-movies">
-          <SavedMovies
-            loggedIn={true}
-            cards={savedCards}
-            isSavedMovies={true}
-            onOpenMenu={handleOpenMenu}
-          />
-        </Route>
-        <Route path="/profile">
-          <Profile
-            loggedIn={true}
-            onOpenMenu={handleOpenMenu}
-          />
-        </Route>
-        <Route path="*">
-          <PageNotFound />
-        </Route>
-      </Switch>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="App">
+        <Switch>
+          <Route path="/signup">
+            <Register
+              onRegister={onRegister}
+              showError={showError}
+              errorText={errorText}
+            />
+          </Route>
+          <Route path="/signin">
+            <Login
+              onLogin={onLogin}
+              showError={showError}
+              errorText={errorText}
+            />
+          </Route>
+          <Route exact path="/">
+            <Main
+              loggedIn={false}
+            />
+          </Route>
+          <Route path="/movies">
+            <Movies
+              loggedIn={true}
+              isSavedMovies={false}
+              onOpenMenu={handleOpenMenu}
+              onGetFilms={handleGetFilms}
+              isLoading={isLoading}
+              displayCards={displayCards}
+              showError={showError}
+              errorText={errorText}
+              wasRequest={wasRequest}
+              visibleСards={visibleСards}
+              displayMore={displayMore}
+              onAddCards={handleAddMoreByClick}
+              onSaveFilm={handleSaveFilm}
+              onDeleteFilm={handleDeleteFilm}
+            />
+          </Route>
+          <Route path="/saved-movies">
+            <SavedMovies
+              loggedIn={true}
+              cards={savedCards}
+              isSavedMovies={true}
+              onOpenMenu={handleOpenMenu}
+            />
+          </Route>
+          <Route path="/profile">
+            <Profile
+              loggedIn={true}
+              onOpenMenu={handleOpenMenu}
+              onEditProfile={handleEditProfile}
+              onSignOut={onSignOut}
+            />
+          </Route>
+          <Route path="*">
+            <PageNotFound />
+          </Route>
+        </Switch>
 
-      <Menu
-        isOpen={isMenuOpen}
-        onCloseMenu={handleCloseMenu}
-      />
-    </div>
+        <Menu
+          isOpen={isMenuOpen}
+          onCloseMenu={handleCloseMenu}
+        />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

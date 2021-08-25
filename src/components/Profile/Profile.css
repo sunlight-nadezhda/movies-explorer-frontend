@@ -63,16 +63,23 @@
   color: #000000;
 }
 
-.profile__edit-button {
+.profile__edit-button:hover {
   cursor: pointer;
 }
 
+.profile__edit-button_disabled {
+  opacity: .4;
+}
+
 .profile__link {
-  text-decoration: none;
+  border: none;
+  padding: 0;
+  background-color: transparent;
   font-weight: 500;
   font-size: 13px;
   line-height: 16px;
   color: #FF4062;
+  cursor: pointer;
 }
 
 @media (max-width: 760px) {
