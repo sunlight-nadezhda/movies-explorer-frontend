@@ -61,6 +61,10 @@
   color: #FFFFFF;
 }
 
+.register__sign-button_disabled {
+  opacity: .4;
+}
+
 .register__sign-button:hover {
   cursor: pointer;
 }

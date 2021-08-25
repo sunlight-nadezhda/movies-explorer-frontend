@@ -22,7 +22,7 @@ const MoviesCardList = (props) => {
           </ul> : props.showError
             ? <ErrorMessage
               showError={props.showError}
-              text="Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+              text={props.errorText}
             />
             : props.wasRequest
             ? <p className="nothing-found">Ничего не найдено</p>

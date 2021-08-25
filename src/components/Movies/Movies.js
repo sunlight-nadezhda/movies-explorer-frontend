@@ -24,6 +24,7 @@ const Movies = (props) => {
           visibleСards={props.visibleСards}
           onSaveFilm={props.onSaveFilm}
           onDeleteFilm={props.onDeleteFilm}
+          errorText={props.errorText}
         />
         <More displayBlock={props.displayMore} onAddCards={props.onAddCards} />
       </main>

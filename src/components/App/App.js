@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
-// import cards from '../../utils/cards';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
@@ -24,6 +23,8 @@ const App = () => {
   const [visibleСards, setVisibleCards] = useState([]);
   const [displayMore, setDisplayMore] = useState(false);
   const [numberCards, setNumberCards] = useState(null);
+  const [errorText, setErrorText] = useState(null);
+  const history = useHistory();
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -32,10 +33,6 @@ const App = () => {
   const handleCloseMenu = () => {
     setIsMenuOpen(false);
   };
-
-  // const selectSavedCards = () => {
-  //   setSavedCards(cards.filter((item) => item.saved));
-  // };
 
   const handleGetFilms = (isBeatFilm, keyWord) => {
     setIsLoading(true);
@@ -63,6 +60,7 @@ const App = () => {
       })
       .catch((err) => {
         setShowError(true);
+        setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
         console.log(err);
       });
     // } // else {
@@ -104,6 +102,20 @@ const App = () => {
     }
   };
 
+  const onRegister = (userData) => {
+    api.register(userData)
+      .then((response) => {
+        if (response) {
+          history.push("/movies");
+        }
+      })
+      .catch((err) => {
+        setShowError(true);
+        setErrorText(err.message);
+        console.log(err);
+      });
+  };
+
   const handleSaveFilm = (film) => {
     setIsLoading(true);
     api.saveFilm(film)
@@ -116,6 +128,7 @@ const App = () => {
       })
       .catch((err) => {
         setShowError(true);
+        setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
         console.log(err);
       });
   };
@@ -132,6 +145,7 @@ const App = () => {
       })
       .catch((err) => {
         setShowError(true);
+        setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
         console.log(err);
       });
   };
@@ -162,15 +176,15 @@ const App = () => {
     };
   });
 
-  // useEffect(() => {
-  //   selectSavedCards();
-  // }, []);
-
   return (
     <div className="App">
       <Switch>
         <Route path="/signup">
-          <Register />
+          <Register
+            onRegister={onRegister}
+            showError={showError}
+            errorText={errorText}
+          />
         </Route>
         <Route path="/signin">
           <Login />
@@ -189,6 +203,7 @@ const App = () => {
             isLoading={isLoading}
             displayCards={displayCards}
             showError={showError}
+            errorText={errorText}
             wasRequest={wasRequest}
             visibleСards={visibleСards}
             displayMore={displayMore}
