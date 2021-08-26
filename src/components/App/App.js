@@ -110,6 +110,11 @@ const App = () => {
     api.register(userData)
       .then((response) => {
         if (response) {
+          setCurrentUser({
+            name: userData.name,
+            email: userData.email,
+          });
+          setLoggedIn(true);
           history.push("/movies");
         }
       })
@@ -123,9 +128,9 @@ const App = () => {
   const onLogin = (userData) => {
     api.authorize(userData)
       .then((response) => {
+        console.log(response);
         if (response) {
-          setLoggedIn(true);
-          history.push("/movies");
+          checkAuth();
         }
       })
       .catch((err) => {
@@ -137,7 +142,7 @@ const App = () => {
 
   const onSignOut = () => {
     console.log(loggedIn);
-    if (!loggedIn) {
+    if (loggedIn) {
       api.logOut()
         .then((response) => {
           if (response) {
@@ -149,6 +154,18 @@ const App = () => {
         .catch((err) => console.log(err));
     }
   };
+
+  const checkAuth = () => {
+    api.checkToken()
+      .then((userData) => {
+        if (userData) {
+          setCurrentUser(userData);
+          setLoggedIn(true);
+          history.push("/movies");
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   const handleEditProfile = (data) => {
     setIsLoading(true);
@@ -224,6 +241,10 @@ const App = () => {
     };
   });
 
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -279,6 +300,8 @@ const App = () => {
               onOpenMenu={handleOpenMenu}
               onEditProfile={handleEditProfile}
               onSignOut={onSignOut}
+              showError={showError}
+              errorText={errorText}
             />
           </Route>
           <Route path="*">

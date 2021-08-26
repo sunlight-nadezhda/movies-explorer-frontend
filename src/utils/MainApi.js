@@ -38,7 +38,15 @@ class Api {
       .then(this._getResponseData);
   };
 
+  checkToken() {
+    return fetch(`${this._url}/users/me`, {
+      credentials: 'include'
+    })
+      .then(this._getResponseData);
+  }
+
   editProfile(data) {
+    console.log(data);
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: {
@@ -46,7 +54,7 @@ class Api {
       },
       body: JSON.stringify({
         name: data.name,
-        about: data.about
+        email: data.email
       }),
       credentials: 'include'
     })

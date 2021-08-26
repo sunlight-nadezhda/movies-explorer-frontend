@@ -11,6 +11,7 @@ const Profile = (props) => {
   const [email, setEmail] = React.useState("");
 
   const currentUser = useContext(CurrentUserContext);
+  console.log(currentUser);
 
   const handleChangeName = (e) => {
     setName(e.target.value);
@@ -23,8 +24,8 @@ const Profile = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     props.onEditProfile({
-      name: values['profile-name'],
-      email: values['profile-email'],
+      name: values['profile-name'] || name,
+      email: values['profile-email'] || email,
     });
     resetForm();
   };
@@ -42,7 +43,7 @@ const Profile = (props) => {
       />
       <main>
         <section className="profile">
-          <h1 className="profile__greetings">Привет, Виталий!</h1>
+          <h1 className="profile__greetings">Привет, {name}!</h1>
 
           <form className="profile__container" onSubmit={handleSubmit}>
             <label htmlFor="profile-name" className="profile__label">
@@ -84,6 +85,8 @@ const Profile = (props) => {
                 .map(([errKey, errValue]) => (
                   <ErrorMessage key={errKey} text={errValue} />
                 ))}
+
+            <ErrorMessage text={props.errorText} />
 
             <input
               type="submit"
