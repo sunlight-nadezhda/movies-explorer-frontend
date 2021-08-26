@@ -39,69 +39,77 @@ const App = () => {
     setIsMenuOpen(false);
   };
 
-  const handleGetFilms = (isBeatFilm, keyWord) => {
-    setIsLoading(true);
-    let numberCards;
-    if (!numberCards) {
-      numberCards = handleActualResize();
-      setNumberCards(numberCards);
-    }
-    const localFilms = localStorage.getItem('films');
-    let films;
-    if (!localFilms) {
-      moviesApi.getFilms()
-        .then(dataFilms => {
-          films = dataFilms.map((film) => {
-            const {
-              director,
-              duration,
-              year,
-              description,
-              trailerLink: trailer,
-              nameRU,
-              nameEN,
-              id: movieId,
-            } = film;
-            const country = film.country || '';
-            const image = film.image.url;
-            const thumbnail = film.image.formats.thumbnail.url;
+  const getFilmsFromApi = async () => {
+    const rawFilms = await moviesApi.getFilms();
+    return rawFilms.map(({
+      director,
+      duration,
+      year,
+      description,
+      trailerLink: trailer,
+      nameRU,
+      nameEN,
+      id: movieId,
+      country,
+      image: {
+        url,
+        formats: {
+          thumbnail: { url: thumbnailUrl }
+        },
+      },
+    }) => ({
+      country: country || '',
+      director,
+      duration,
+      year,
+      description,
+      image: url,
+      trailer,
+      nameRU,
+      nameEN,
+      thumbnail: thumbnailUrl,
+      movieId
+    }));
+  };
 
-            return {
-              country,
-              director,
-              duration,
-              year,
-              description,
-              image,
-              trailer,
-              nameRU,
-              nameEN,
-              thumbnail,
-              movieId};
-          });
-          // setfilms(dataFilms);
-          localStorage.setItem('films', JSON.stringify(films));
-        })
-        .catch((err) => {
-          setShowError(true);
-          setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-          console.log(err);
-        });
-    } else {
-      const localFilms = JSON.parse(localStorage.getItem('films'));
-      films = localFilms;
-      // setfilms(localFilms);
+  const getFilmsFromLocalStorage = () => {
+    const rawFilms = localStorage.getItem('films');
+    if (!rawFilms) return null;
+    try {
+      return JSON.parse(rawFilms);
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const handleGetFilms = async (isBeatFilm, keyWord) => {
+    setIsLoading(true);
+    const numberCards = handleActualResize();
+    const localFilms = getFilmsFromLocalStorage();
+    try {
+      const films = localFilms === null
+        ? await getFilmsFromApi()
+        : localFilms;
+      if (localFilms === null) {
+        localStorage.setItem('films', JSON.stringify(films));
+      }
+      const selectedFilms = films.filter(({ nameRU, duration }) => {
+        if (isBeatFilm && duration > 40) return false;
+        return nameRU.toLowerCase().includes(keyWord.toLowerCase());
+      });
+      setFilteredFilms(selectedFilms);
+      setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
+    } catch (err) {
+      setShowError(true);
+      setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+      setFilteredFilms([]);
+      setVisibleCards([]);
+      console.log(err);
     }
     setIsLoading(false);
     setDisplayCards(true);
     setWasRequest(true);
-    const byTitle = film => film.nameRU.toLowerCase().includes(keyWord.toLowerCase());
-    const byDuration = film => film.duration <= 40;
-    const selectedFilms = isBeatFilm
-      ? films.filter(byDuration).filter(byTitle)
-      : films.filter(byTitle);
-    setFilteredFilms(selectedFilms);
-    setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
+    setNumberCards(numberCards);
   };
 
   const handleActualResize = () => {
