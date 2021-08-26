@@ -15,16 +15,17 @@ import { CurrentUserContext } from '../../utils/CurrentUserContext';
 
 const App = () => {
   const [films, setfilms] = useState([]);
-  const [savedCards, setSavedCards] = useState([]);
+  const [savedFilms, setSavedFilms] = useState([]);
+  const [visibleСards, setVisibleCards] = useState([]);
+  const [filteredFilms, setFilteredFilms] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [displayCards, setDisplayCards] = useState(false);
-  const [showError, setShowError] = useState(false);
   const [wasRequest, setWasRequest] = useState(false);
-  const [visibleСards, setVisibleCards] = useState([]);
   const [displayMore, setDisplayMore] = useState(false);
   const [numberCards, setNumberCards] = useState(null);
   const [errorText, setErrorText] = useState(null);
+  const [showError, setShowError] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
@@ -44,42 +45,40 @@ const App = () => {
       numberCards = handleActualResize();
       setNumberCards(numberCards);
     }
-    // const localFilms = localStorage.getItem('selectedFilms');
-    moviesApi.getFilms()
-      .then(dataFilms => {
-        const byTitle = film => film.nameRU.toLowerCase().includes(keyWord.toLowerCase());
-        const byDuration = film => film.duration <= 40;
-        const selectedFilms = isBeatFilm
-          ? dataFilms.filter(byDuration).filter(byTitle)
-          : dataFilms.filter(byTitle);
-        setfilms(selectedFilms);
-        localStorage.setItem('selectedFilms', JSON.stringify(selectedFilms));
-        console.log('numberCards fetch ', numberCards);
-        setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
-        setIsLoading(false);
-        setDisplayCards(true);
-        setWasRequest(true);
-        console.log('dataFilms ', dataFilms);
-      })
-      .catch((err) => {
-        setShowError(true);
-        setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-        console.log(err);
-      });
-    // } // else {
-    //   setfilms(localFilms);
-    //   console.log('numberCards local ', numberCards);
-    //   setVisibleCards(JSON.parse(localFilms).filter((v, k) => k < numberCards.maxFirstShowCards));
-    //   setIsLoading(false);
-    //   setDisplayCards(true);
-    //   setWasRequest(true);
-    //   console.log('localFilms ', JSON.parse(localFilms));
-    // }
+    const localFilms = localStorage.getItem('films');
+    let films;
+    if (!localFilms) {
+      moviesApi.getFilms()
+        .then(dataFilms => {
+          films = dataFilms;
+          setfilms(dataFilms);
+          localStorage.setItem('films', JSON.stringify(dataFilms));
+        })
+        .catch((err) => {
+          setShowError(true);
+          setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+          console.log(err);
+        });
+    } else {
+      const localFilms = JSON.parse(localStorage.getItem('films'));
+      films = localFilms;
+      setfilms(localFilms);
+    }
+    setIsLoading(false);
+    setDisplayCards(true);
+    setWasRequest(true);
+    const byTitle = film => film.nameRU.toLowerCase().includes(keyWord.toLowerCase());
+    const byDuration = film => film.duration <= 40;
+    const selectedFilms = isBeatFilm
+      ? films.filter(byDuration).filter(byTitle)
+      : films.filter(byTitle);
+    setFilteredFilms(selectedFilms);
+    setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
+    console.log(selectedFilms);
   };
 
   const handleActualResize = () => {
     const screenWidth = window.screen.width;
-    console.log(screenWidth);
     if (screenWidth < 481) {
       return {
         maxFirstShowCards: 5,
@@ -99,9 +98,9 @@ const App = () => {
   };
 
   const handleAddMoreByClick = () => {
-    console.log(films.length);
-    if (films.length) {
-      setVisibleCards(films.filter((v, k) => k < visibleСards.length + numberCards.numberAdd));
+    console.log(filteredFilms.length);
+    if (filteredFilms.length) {
+      setVisibleCards(filteredFilms.filter((v, k) => k < visibleСards.length + numberCards.numberAdd));
     }
   };
 
@@ -128,7 +127,6 @@ const App = () => {
   const onLogin = (userData) => {
     api.authorize(userData)
       .then((response) => {
-        console.log(response);
         if (response) {
           checkAuth();
         }
@@ -185,7 +183,7 @@ const App = () => {
     setIsLoading(true);
     api.saveFilm(film)
       .then(dataFilm => {
-        setSavedCards([...savedCards, dataFilm]);
+        setSavedFilms([...savedFilms, dataFilm]);
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -202,7 +200,7 @@ const App = () => {
     setIsLoading(true);
     api.deleteFilm(film._id)
       .then(dataFilm => {
-        setSavedCards((state) => state.filter((c) => c._id !== film._id));
+        setSavedFilms((state) => state.filter((c) => c._id !== film._id));
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -216,12 +214,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (visibleСards.length && films.length && visibleСards[visibleСards.length - 1].id !== films[films.length - 1].id) {
+    if (visibleСards.length && filteredFilms.length && visibleСards[visibleСards.length - 1].id !== filteredFilms[filteredFilms.length - 1].id) {
       setDisplayMore(true);
     } else {
       setDisplayMore(false);
     }
-  }, [visibleСards, films]);
+  }, [visibleСards, filteredFilms]);
 
   useEffect(() => {
     let resizeTimeout;
@@ -289,7 +287,7 @@ const App = () => {
           <Route path="/saved-movies">
             <SavedMovies
               loggedIn={true}
-              cards={savedCards}
+              cards={savedFilms}
               isSavedMovies={true}
               onOpenMenu={handleOpenMenu}
             />
