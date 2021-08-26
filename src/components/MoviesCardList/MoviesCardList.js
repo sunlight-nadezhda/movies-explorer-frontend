@@ -8,12 +8,12 @@ const MoviesCardList = (props) => {
   return (
     <section className="card-list">
       {props.isLoading ? <Preloader /> :
-        props.visibleСards.length > 0 ?
+        props.cards.length > 0 ?
           <ul className={`cards ${props.displayCards ? 'show-cards' : 'hide-block'}`}>
-            {props.visibleСards.map((filmInfo) => (
+            {props.cards.map((filmInfo) => (
               <MoviesCard
                 film={filmInfo}
-                key={filmInfo.id}
+                key={filmInfo.id || filmInfo.movieId}
                 isSavedMovies={props.isSavedMovies}
                 onSaveFilm={props.onSaveFilm}
                 onDeleteFilm={props.onDeleteFilm}

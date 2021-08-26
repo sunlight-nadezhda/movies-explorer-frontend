@@ -17,6 +17,7 @@ const Movies = (props) => {
         <MoviesCardList
           cards={props.cards}
           isSavedMovies={props.isSavedMovies}
+          displayCards={props.displayCards}
         />
       </main>
       <Footer />

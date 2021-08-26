@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 import './App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -12,9 +12,10 @@ import Menu from '../Menu/Menu';
 import moviesApi from '../../utils/MoviesApi';
 import api from '../../utils/MainApi';
 import { CurrentUserContext } from '../../utils/CurrentUserContext';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 const App = () => {
-  const [films, setfilms] = useState([]);
+  // const [films, setfilms] = useState([]);
   const [savedFilms, setSavedFilms] = useState([]);
   const [visibleСards, setVisibleCards] = useState([]);
   const [filteredFilms, setFilteredFilms] = useState([]);
@@ -50,9 +51,36 @@ const App = () => {
     if (!localFilms) {
       moviesApi.getFilms()
         .then(dataFilms => {
-          films = dataFilms;
-          setfilms(dataFilms);
-          localStorage.setItem('films', JSON.stringify(dataFilms));
+          films = dataFilms.map((film) => {
+            const {
+              director,
+              duration,
+              year,
+              description,
+              trailerLink: trailer,
+              nameRU,
+              nameEN,
+              id: movieId,
+            } = film;
+            const country = film.country || '';
+            const image = film.image.url;
+            const thumbnail = film.image.formats.thumbnail.url;
+
+            return {
+              country,
+              director,
+              duration,
+              year,
+              description,
+              image,
+              trailer,
+              nameRU,
+              nameEN,
+              thumbnail,
+              movieId};
+          });
+          // setfilms(dataFilms);
+          localStorage.setItem('films', JSON.stringify(films));
         })
         .catch((err) => {
           setShowError(true);
@@ -62,7 +90,7 @@ const App = () => {
     } else {
       const localFilms = JSON.parse(localStorage.getItem('films'));
       films = localFilms;
-      setfilms(localFilms);
+      // setfilms(localFilms);
     }
     setIsLoading(false);
     setDisplayCards(true);
@@ -74,7 +102,6 @@ const App = () => {
       : films.filter(byTitle);
     setFilteredFilms(selectedFilms);
     setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
-    console.log(selectedFilms);
   };
 
   const handleActualResize = () => {
@@ -139,7 +166,6 @@ const App = () => {
   };
 
   const onSignOut = () => {
-    console.log(loggedIn);
     if (loggedIn) {
       api.logOut()
         .then((response) => {
@@ -181,13 +207,14 @@ const App = () => {
 
   const handleSaveFilm = (film) => {
     setIsLoading(true);
+    console.log(film);
     api.saveFilm(film)
       .then(dataFilm => {
         setSavedFilms([...savedFilms, dataFilm]);
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
-        console.log('dataFilm ', dataFilm);
+        console.log('save dataFilm ', dataFilm);
       })
       .catch((err) => {
         setShowError(true);
@@ -198,13 +225,14 @@ const App = () => {
 
   const handleDeleteFilm = (film) => {
     setIsLoading(true);
+    console.log('savedFilms ', savedFilms);
     api.deleteFilm(film._id)
       .then(dataFilm => {
         setSavedFilms((state) => state.filter((c) => c._id !== film._id));
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
-        console.log('dataFilm ', dataFilm);
+        console.log('del dataFilm ', dataFilm);
       })
       .catch((err) => {
         setShowError(true);
@@ -212,6 +240,25 @@ const App = () => {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    console.log('savedFilms ', savedFilms);
+    api.getSavedFilms()
+      .then(dataFilms => {
+        setSavedFilms(dataFilms);
+        setIsLoading(false);
+        setDisplayCards(true);
+        setWasRequest(true);
+        console.log('savedFilms load', dataFilms);
+      })
+      .catch((err) => {
+        setShowError(true);
+        setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+        console.log(err);
+      });
+    setSavedFilms();
+  }, []);
 
   useEffect(() => {
     if (visibleСards.length && filteredFilms.length && visibleСards[visibleСards.length - 1].id !== filteredFilms[filteredFilms.length - 1].id) {
@@ -263,47 +310,57 @@ const App = () => {
           </Route>
           <Route exact path="/">
             <Main
-              loggedIn={false}
+              loggedIn={loggedIn}
             />
           </Route>
-          <Route path="/movies">
-            <Movies
-              loggedIn={true}
-              isSavedMovies={false}
-              onOpenMenu={handleOpenMenu}
-              onGetFilms={handleGetFilms}
-              isLoading={isLoading}
-              displayCards={displayCards}
-              showError={showError}
-              errorText={errorText}
-              wasRequest={wasRequest}
-              visibleСards={visibleСards}
-              displayMore={displayMore}
-              onAddCards={handleAddMoreByClick}
-              onSaveFilm={handleSaveFilm}
-              onDeleteFilm={handleDeleteFilm}
-            />
-          </Route>
-          <Route path="/saved-movies">
-            <SavedMovies
-              loggedIn={true}
-              cards={savedFilms}
-              isSavedMovies={true}
-              onOpenMenu={handleOpenMenu}
-            />
-          </Route>
-          <Route path="/profile">
-            <Profile
-              loggedIn={true}
-              onOpenMenu={handleOpenMenu}
-              onEditProfile={handleEditProfile}
-              onSignOut={onSignOut}
-              showError={showError}
-              errorText={errorText}
-            />
-          </Route>
-          <Route path="*">
-            <PageNotFound />
+          <ProtectedRoute
+            path="/movies"
+            loggedIn={loggedIn}
+            component={Movies}
+            isSavedMovies={false}
+            onOpenMenu={handleOpenMenu}
+            onGetFilms={handleGetFilms}
+            isLoading={isLoading}
+            displayCards={displayCards}
+            showError={showError}
+            errorText={errorText}
+            wasRequest={wasRequest}
+            cards={visibleСards}
+            displayMore={displayMore}
+            onAddCards={handleAddMoreByClick}
+            onSaveFilm={handleSaveFilm}
+            onDeleteFilm={handleDeleteFilm}
+          />
+          <ProtectedRoute
+            path="/saved-movies"
+            loggedIn={loggedIn}
+            component={SavedMovies}
+            cards={savedFilms}
+            isSavedMovies={true}
+            onOpenMenu={handleOpenMenu}
+            displayCards={true}
+          />
+          <ProtectedRoute
+            path="/profile"
+            loggedIn={loggedIn}
+            component={Profile}
+            onOpenMenu={handleOpenMenu}
+            onEditProfile={handleEditProfile}
+            onSignOut={onSignOut}
+            showError={showError}
+            errorText={errorText}
+          />
+          <ProtectedRoute
+            path="*"
+            loggedIn={loggedIn}
+            component={PageNotFound}
+          />
+          <Route>
+            {loggedIn ? (
+              <Redirect to="/movies" />
+            ) : (
+              <Redirect to="/" />
+            )}
           </Route>
         </Switch>
 

@@ -11,7 +11,6 @@ const Profile = (props) => {
   const [email, setEmail] = React.useState("");
 
   const currentUser = useContext(CurrentUserContext);
-  console.log(currentUser);
 
   const handleChangeName = (e) => {
     setName(e.target.value);

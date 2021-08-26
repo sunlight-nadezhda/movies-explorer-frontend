@@ -60,7 +60,7 @@
   color: #000000;
 }
 
-.card__button {
+.card__button:hover {
   cursor: pointer;
 }
 

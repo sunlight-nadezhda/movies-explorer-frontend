@@ -21,7 +21,7 @@ const Movies = (props) => {
           isLoading={props.isLoading}
           showError={props.showError}
           wasRequest={props.wasRequest}
-          visibleСards={props.visibleСards}
+          cards={props.cards}
           onSaveFilm={props.onSaveFilm}
           onDeleteFilm={props.onDeleteFilm}
           errorText={props.errorText}
