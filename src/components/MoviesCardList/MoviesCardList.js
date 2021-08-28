@@ -13,8 +13,12 @@ const MoviesCardList = (props) => {
             {props.cards.map((filmInfo) => (
               <MoviesCard
                 film={filmInfo}
-                key={filmInfo.id || filmInfo.movieId}
+                key={filmInfo.movieId}
                 isSavedMovies={props.isSavedMovies}
+                isFilmSaved={props.savedFilms.some((film) => film.movieId === filmInfo.movieId)}
+                // savedFilm={props.savedFilms.find((film) => film.movieId === filmInfo.movieId)}
+                savedFilms={props.savedFilms}
+                setIsFilmSaved={props.setIsFilmSaved}
                 onSaveFilm={props.onSaveFilm}
                 onDeleteFilm={props.onDeleteFilm}
               />

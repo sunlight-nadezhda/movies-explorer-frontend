@@ -5,7 +5,7 @@ import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 
-const Movies = (props) => {
+const SavedMovies = (props) => {
   return (
     <div className="page">
       <Header
@@ -17,7 +17,9 @@ const Movies = (props) => {
         <MoviesCardList
           cards={props.cards}
           isSavedMovies={props.isSavedMovies}
+          savedFilms={props.cards}
           displayCards={props.displayCards}
+          onDeleteFilm={props.onDeleteFilm}
         />
       </main>
       <Footer />
@@ -25,4 +27,4 @@ const Movies = (props) => {
   );
 }
 
-export default Movies;
+export default SavedMovies;

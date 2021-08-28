@@ -17,6 +17,8 @@ const Movies = (props) => {
         <SearchForm onGetFilms={props.onGetFilms} />
         <MoviesCardList
           isSavedMovies={props.isSavedMovies}
+          savedFilms={props.savedFilms}
+          setIsFilmSaved={props.setIsFilmSaved}
           displayCards={props.displayCards}
           isLoading={props.isLoading}
           showError={props.showError}

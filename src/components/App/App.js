@@ -15,7 +15,6 @@ import { CurrentUserContext } from '../../utils/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 const App = () => {
-  // const [films, setfilms] = useState([]);
   const [savedFilms, setSavedFilms] = useState([]);
   const [visibleСards, setVisibleCards] = useState([]);
   const [filteredFilms, setFilteredFilms] = useState([]);
@@ -58,7 +57,7 @@ const App = () => {
         },
       },
     }) => ({
-      country: country || '',
+      country: country || 'country',
       director,
       duration,
       year,
@@ -77,7 +76,7 @@ const App = () => {
     if (!rawFilms) return null;
     try {
       return JSON.parse(rawFilms);
-    } catch (e) {
+    } catch (err) {
       return null;
     }
   };
@@ -215,14 +214,12 @@ const App = () => {
 
   const handleSaveFilm = (film) => {
     setIsLoading(true);
-    console.log(film);
     api.saveFilm(film)
       .then(dataFilm => {
         setSavedFilms([...savedFilms, dataFilm]);
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
-        console.log('save dataFilm ', dataFilm);
       })
       .catch((err) => {
         setShowError(true);
@@ -231,16 +228,15 @@ const App = () => {
       });
   };
 
-  const handleDeleteFilm = (film) => {
+  const handleDeleteFilm = (clickedFilm) => {
     setIsLoading(true);
-    console.log('savedFilms ', savedFilms);
-    api.deleteFilm(film._id)
+    const deletedFilm = savedFilms.find((film) => film.movieId === clickedFilm.movieId);
+    api.deleteFilm(deletedFilm._id)
       .then(dataFilm => {
-        setSavedFilms((state) => state.filter((c) => c._id !== film._id));
+        setSavedFilms((state) => state.filter((c) => c._id !== deletedFilm._id));
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
-        console.log('del dataFilm ', dataFilm);
       })
       .catch((err) => {
         setShowError(true);
@@ -251,22 +247,21 @@ const App = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    console.log('savedFilms ', savedFilms);
-    api.getSavedFilms()
-      .then(dataFilms => {
-        setSavedFilms(dataFilms);
-        setIsLoading(false);
-        setDisplayCards(true);
-        setWasRequest(true);
-        console.log('savedFilms load', dataFilms);
-      })
-      .catch((err) => {
-        setShowError(true);
-        setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-        console.log(err);
-      });
-    setSavedFilms();
-  }, []);
+    if (loggedIn) {
+      api.getSavedFilms()
+        .then(dataFilms => {
+          setSavedFilms(dataFilms);
+          setIsLoading(false);
+          setDisplayCards(true);
+          setWasRequest(true);
+        })
+        .catch((err) => {
+          setShowError(true);
+          setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     if (visibleСards.length && filteredFilms.length && visibleСards[visibleСards.length - 1].id !== filteredFilms[filteredFilms.length - 1].id) {
@@ -295,7 +290,9 @@ const App = () => {
   });
 
   useEffect(() => {
-    checkAuth();
+    try {
+      checkAuth();
+    } catch (err) { console.log(err)}
   }, []);
 
   return (
@@ -326,6 +323,7 @@ const App = () => {
             loggedIn={loggedIn}
             component={Movies}
             isSavedMovies={false}
+            savedFilms={savedFilms}
             onOpenMenu={handleOpenMenu}
             onGetFilms={handleGetFilms}
             isLoading={isLoading}
@@ -347,11 +345,13 @@ const App = () => {
             isSavedMovies={true}
             onOpenMenu={handleOpenMenu}
             displayCards={true}
+            onDeleteFilm={handleDeleteFilm}
           />
           <ProtectedRoute
             path="/profile"
             loggedIn={loggedIn}
             component={Profile}
+            savedFilms={savedFilms}
             onOpenMenu={handleOpenMenu}
             onEditProfile={handleEditProfile}
             onSignOut={onSignOut}
