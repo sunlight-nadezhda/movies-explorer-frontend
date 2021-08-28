@@ -67,7 +67,7 @@ const Login = (props) => {
 
       <div className="login__reg-block">
         <span className="login__reg-text">Ещё не зарегистрированы?</span>
-        <Link to="/signin" className="login__reg-link">Регистрация</Link>
+        <Link to="/signup" className="login__reg-link">Регистрация</Link>
       </div>
     </form>
   );
