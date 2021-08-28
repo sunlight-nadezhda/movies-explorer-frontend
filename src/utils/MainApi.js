@@ -104,7 +104,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'api.movies-explorer.sun.nomoredomains.monster',
+  baseUrl: '//api.movies-explorer.sun.nomoredomains.monster',
   // baseUrl: 'http://localhost:3000',
 });
 
