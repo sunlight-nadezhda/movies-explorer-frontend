@@ -46,7 +46,6 @@ class Api {
   }
 
   editProfile(data) {
-    console.log(data);
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: {

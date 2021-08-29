@@ -28,6 +28,7 @@ const App = () => {
   const [showError, setShowError] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const history = useHistory();
 
   const handleOpenMenu = () => {
@@ -204,6 +205,7 @@ const App = () => {
       .then((userData) => {
         setIsLoading(false);
         setCurrentUser(userData);
+        setShowSuccessMessage(true);
       })
       .catch((err) => {
         setShowError(true);
@@ -355,6 +357,7 @@ const App = () => {
             onSignOut={onSignOut}
             showError={showError}
             errorText={errorText}
+            showSuccessMessage={showSuccessMessage}
           />
           <ProtectedRoute
             path="*"

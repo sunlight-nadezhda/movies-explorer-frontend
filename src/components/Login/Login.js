@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.css';
 import logoPath from '../../images/logo.svg';
@@ -7,6 +7,16 @@ import { useFormWithValidation } from '../../utils/useFormWithValidation';
 
 const Login = (props) => {
   const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleInputEmail = (event) => {
+    setEmail(event.target.value);
+  }
+
+  const handleInputPassword = (event) => {
+    setPassword(event.target.value);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,6 +25,8 @@ const Login = (props) => {
       password: values['login-pass'],
     });
     resetForm();
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -31,9 +43,11 @@ const Login = (props) => {
         id="login-email"
         name="login-email"
         placeholder="E-mail"
+        value={email}
         className="login__input login__email-input"
         required
-        onInput={handleChange}
+        onInput={handleInputEmail}
+        onChange={handleChange}
       />
 
       <label htmlFor="login-pass" className="login__label">Пароль</label>
@@ -42,9 +56,11 @@ const Login = (props) => {
         id="login-pass"
         name="login-pass"
         placeholder="Пароль"
+        value={password}
         className="login__input login__pass-input"
         required
-        onInput={handleChange}
+        onInput={handleInputPassword}
+        onChange={handleChange}
       />
 
       {!Object.keys(errors).length

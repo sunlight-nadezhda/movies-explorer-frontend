@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './Profile.css';
 import Header from '../Header/Header';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
@@ -7,18 +7,18 @@ import { CurrentUserContext } from '../../utils/CurrentUserContext';
 
 const Profile = (props) => {
   const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
   const currentUser = useContext(CurrentUserContext);
 
-  const handleChangeName = (e) => {
-    setName(e.target.value);
-  };
+  const handleInputName = (event) => {
+    setName(event.target.value.replace(/[^a-zа-я \-]{2,30}/gi, ((letter) => '')));
+  }
 
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
+  const handleInputEmail = (event) => {
+    setEmail(event.target.value);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,8 +56,8 @@ const Profile = (props) => {
                 className="profile__name-input"
                 required minLength="2"
                 maxLength="30"
-                onInput={handleChange}
-                onChange={handleChangeName}
+                onInput={handleInputName}
+                onChange={handleChange}
               />
             </label>
 
@@ -73,8 +73,8 @@ const Profile = (props) => {
                 placeholder="E-mail"
                 className="profile__email-input"
                 required
-                onInput={handleChange}
-                onChange={handleChangeEmail}
+                onInput={handleInputEmail}
+                onChange={handleChange}
               />
             </label>
 
@@ -86,6 +86,9 @@ const Profile = (props) => {
                 ))}
 
             <ErrorMessage text={props.errorText} />
+            <div className="profile__success-message" style={{
+              display: props.showSuccessMessage ? 'block' : 'none'
+            }}>Профиль успешно отредактирован</div>
 
             <input
               type="submit"
