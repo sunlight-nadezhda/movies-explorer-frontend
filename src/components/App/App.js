@@ -192,7 +192,7 @@ const App = () => {
         if (userData) {
           setCurrentUser(userData);
           setLoggedIn(true);
-          history.push("/movies");
+          // history.push("/movies");
         }
       })
       .catch((err) => console.log(err));
