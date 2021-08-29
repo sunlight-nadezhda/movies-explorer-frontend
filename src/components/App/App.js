@@ -193,7 +193,7 @@ const App = () => {
         if (userData) {
           setCurrentUser(userData);
           setLoggedIn(true);
-          // history.push("/movies");
+          history.push("/movies");
         }
       })
       .catch((err) => console.log(err));
@@ -266,7 +266,7 @@ const App = () => {
   }, [loggedIn]);
 
   useEffect(() => {
-    if (visibleСards.length && filteredFilms.length && visibleСards[visibleСards.length - 1].id !== filteredFilms[filteredFilms.length - 1].id) {
+    if (visibleСards.length && filteredFilms.length && visibleСards[visibleСards.length - 1].movieId !== filteredFilms[filteredFilms.length - 1].movieId) {
       setDisplayMore(true);
     } else {
       setDisplayMore(false);
