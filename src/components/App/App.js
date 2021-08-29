@@ -139,7 +139,6 @@ const App = () => {
   };
 
   const onRegister = (userData) => {
-    setLoggedIn(true);
     api.register(userData)
       .then((response) => {
         if (response) {
@@ -147,6 +146,7 @@ const App = () => {
             name: userData.name,
             email: userData.email,
           });
+          checkAuth();
           setLoggedIn(true);
           history.push("/movies");
         }
@@ -290,9 +290,7 @@ const App = () => {
   });
 
   useEffect(() => {
-    try {
-      checkAuth();
-    } catch (err) { console.log(err)}
+    checkAuth();
   }, []);
 
   return (

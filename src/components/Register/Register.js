@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Register.css';
 import logoPath from '../../images/logo.svg';
@@ -7,15 +7,33 @@ import { useFormWithValidation } from '../../utils/useFormWithValidation';
 
 const Register = (props) => {
   const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleInputName = (event) => {
+    setName(event.target.value.replace(/[^a-zа-я \-]{2,30}/gi, ((letter) => '')));
+  }
+
+  const handleInputEmail = (event) => {
+    setEmail(event.target.value);
+  }
+
+  const handleInputPassword = (event) => {
+    setPassword(event.target.value);
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
     props.onRegister({
       name: values['register-name'],
       email: values['register-email'],
       password: values['register-pass'],
     });
     resetForm();
+    setName('');
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -32,12 +50,13 @@ const Register = (props) => {
         id="register-name"
         name="register-name"
         placeholder="Имя"
+        value={name}
         className="register__input register__name-input"
         required
         minLength="2"
         maxLength="30"
-        // pattern={/[a-zа-я \-]{2,30}/gi}
-        onInput={handleChange}
+        onInput={handleInputName}
+        onChange={handleChange}
       />
 
       <label htmlFor="register-email" className="register__label">E-mail</label>
@@ -46,9 +65,11 @@ const Register = (props) => {
         id="register-email"
         name="register-email"
         placeholder="E-mail"
+        value={email}
         className="register__input register__email-input"
         required
-        onInput={handleChange}
+        onInput={handleInputEmail}
+        onChange={handleChange}
       />
 
       <label htmlFor="register-pass" className="register__label">Пароль</label>
@@ -57,9 +78,11 @@ const Register = (props) => {
         id="register-pass"
         name="register-pass"
         placeholder="Пароль"
+        value={password}
         className="register__input register__pass-input"
         required
-        onInput={handleChange}
+        onInput={handleInputPassword}
+        onChange={handleChange}
       />
 
       {!Object.keys(errors).length
