@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import { Route, Switch, useHistory, Redirect, useLocation } from 'react-router-dom';
 import './App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -30,6 +30,7 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const history = useHistory();
+  let location = useLocation();
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -149,7 +150,7 @@ const App = () => {
           });
           checkAuth();
           setLoggedIn(true);
-          history.push("/movies");
+          // history.push("/movies");
         }
       })
       .catch((err) => {
@@ -193,11 +194,30 @@ const App = () => {
         if (userData) {
           setCurrentUser(userData);
           setLoggedIn(true);
-          history.push("/movies");
+          // history.push("/movies");
+          // console.log(location.pathname);
+          // console.log(loggedIn);
+          // if (loggedIn) {
+          //   history.push(location.pathname);
+          // } else {
+          //   history.push("/movies");
+          // }
+          history.push(location.pathname === '/signup'
+            || location.pathname === '/signin'
+            ? '/movies' : location.pathname === '/movies'
+              || location.pathname === '/saved-movies'
+              || location.pathname === '/profile'
+              ? location.pathname
+              : '/not-found');
+          // console.log(location.pathname);
         }
       })
       .catch((err) => console.log(err));
   }
+
+  // const selectLocationPath = () => {
+
+  // };
 
   const handleEditProfile = (data) => {
     setIsLoading(true);
@@ -246,6 +266,10 @@ const App = () => {
         console.log(err);
       });
   };
+
+  // useEffect(() => {
+  //   console.log(location.pathname);
+  // }, [location]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -360,17 +384,14 @@ const App = () => {
             showSuccessMessage={showSuccessMessage}
           />
           <ProtectedRoute
-            path="*"
+            path="/not-found"
             loggedIn={loggedIn}
             component={PageNotFound}
           />
           <Route>
-            {loggedIn ? (
-              <Redirect to="/movies" />
-            ) : (
-              <Redirect to="/" />
-            )}
+            {!loggedIn && (<Redirect to="/signin" />)}
           </Route>
+          <Redirect to="/not-found" />
         </Switch>
 
         <Menu
