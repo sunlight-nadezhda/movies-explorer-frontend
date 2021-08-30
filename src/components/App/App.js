@@ -13,6 +13,20 @@ import moviesApi from '../../utils/MoviesApi';
 import api from '../../utils/MainApi';
 import { CurrentUserContext } from '../../utils/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import { constants } from '../../utils/constants';
+
+const {
+  durationBeatFilm,
+  smallScreenWidth,
+  mediumScreenWidth,
+  maxFirstShowCardsOnMobile,
+  maxFirstShowCardsOnNotebook,
+  maxFirstShowCardsOnDesctop,
+  numberAddForMoreButtonOnMobile,
+  numberAddForMoreButtonOnDesctop,
+} = constants;
+
+console.log(durationBeatFilm);
 
 const App = () => {
   const [savedFilms, setSavedFilms] = useState([]);
@@ -83,9 +97,7 @@ const App = () => {
     }
   };
 
-  const handleGetFilms = async (isBeatFilm, keyWord) => {
-    setIsLoading(true);
-    const numberCards = handleActualResize();
+  const getAllFilms = async () => {
     const localFilms = getFilmsFromLocalStorage();
     try {
       const films = localFilms === null
@@ -94,12 +106,12 @@ const App = () => {
       if (localFilms === null) {
         localStorage.setItem('films', JSON.stringify(films));
       }
-      const selectedFilms = films.filter(({ nameRU, duration }) => {
-        if (isBeatFilm && duration > 40) return false;
-        return nameRU.toLowerCase().includes(keyWord.toLowerCase());
-      });
-      setFilteredFilms(selectedFilms);
-      setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
+      // const selectedFilms = films.filter(({ nameRU, duration }) => {
+      //   if (isBeatFilm && duration > durationBeatFilm) return false;
+      //   return nameRU.toLowerCase().includes(keyWord.toLowerCase());
+      // });
+      // setFilteredFilms(selectedFilms);
+      // setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
     } catch (err) {
       setShowError(true);
       setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
@@ -107,6 +119,40 @@ const App = () => {
       setVisibleCards([]);
       console.log(err);
     }
+  };
+
+  const handleGetFilms = async (isBeatFilm, keyWord, films) => {
+    setIsLoading(true);
+    const numberCards = handleActualResize();
+    getAllFilms();
+
+    const selectedFilms = films.filter(({ nameRU, duration }) => {
+      if (isBeatFilm && duration > durationBeatFilm) return false;
+      return nameRU.toLowerCase().includes(keyWord.toLowerCase());
+    });
+    setFilteredFilms(selectedFilms);
+    setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
+    // const localFilms = getFilmsFromLocalStorage();
+    // try {
+    //   const films = localFilms === null
+    //     ? await getFilmsFromApi()
+    //     : localFilms;
+    //   if (localFilms === null) {
+    //     localStorage.setItem('films', JSON.stringify(films));
+    //   }
+    //   const selectedFilms = films.filter(({ nameRU, duration }) => {
+    //     if (isBeatFilm && duration > durationBeatFilm) return false;
+    //     return nameRU.toLowerCase().includes(keyWord.toLowerCase());
+    //   });
+    //   setFilteredFilms(selectedFilms);
+    //   setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
+    // } catch (err) {
+    //   setShowError(true);
+    //   setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+    //   setFilteredFilms([]);
+    //   setVisibleCards([]);
+    //   console.log(err);
+    // }
     setIsLoading(false);
     setDisplayCards(true);
     setWasRequest(true);
@@ -115,20 +161,20 @@ const App = () => {
 
   const handleActualResize = () => {
     const screenWidth = window.screen.width;
-    if (screenWidth < 481) {
+    if (screenWidth < smallScreenWidth) {
       return {
-        maxFirstShowCards: 5,
-        numberAdd: 2,
+        maxFirstShowCards: maxFirstShowCardsOnMobile,
+        numberAdd: numberAddForMoreButtonOnMobile,
       };
-    } else if (screenWidth < 1020) {
+    } else if (screenWidth < mediumScreenWidth) {
       return {
-        maxFirstShowCards: 8,
-        numberAdd: 2,
+        maxFirstShowCards: maxFirstShowCardsOnNotebook,
+        numberAdd: numberAddForMoreButtonOnMobile,
       };
     } else {
       return {
-        maxFirstShowCards: 12,
-        numberAdd: 3,
+        maxFirstShowCards: maxFirstShowCardsOnDesctop,
+        numberAdd: numberAddForMoreButtonOnDesctop,
       };
     }
   };
@@ -350,6 +396,7 @@ const App = () => {
             cards={savedFilms}
             isSavedMovies={true}
             onOpenMenu={handleOpenMenu}
+            onGetFilms={handleGetFilms}
             displayCards={true}
             onDeleteFilm={handleDeleteFilm}
           />

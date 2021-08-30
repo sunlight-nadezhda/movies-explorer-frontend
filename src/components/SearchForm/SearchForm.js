@@ -15,9 +15,10 @@ const SearchForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!!searchedFilm) props.onGetFilms(isBeatFilm, searchedFilm);
+    if (!!searchedFilm) props.onGetFilms(isBeatFilm, searchedFilm, props.films);
 
     setShowError(!searchedFilm);
+    setSearchedFilm('');
   };
 
   return (
@@ -30,7 +31,16 @@ const SearchForm = (props) => {
         <label htmlFor="site-search">
           <div className="search__icon"></div>
         </label>
-        <input type="search" id="site-search" name="site-search" value={searchedFilm} placeholder="Фильм" className="search__input" onChange={getSearchedFilm} required />
+        <input
+          type="search"
+          id="site-search"
+          name="site-search"
+          value={searchedFilm}
+          placeholder="Фильм"
+          className="search__input"
+          onChange={getSearchedFilm}
+          required
+        />
         <input type="submit" value="" className="search__submit" />
         <FilterCheckbox setIsBeatFilm={setIsBeatFilm} />
       </form>

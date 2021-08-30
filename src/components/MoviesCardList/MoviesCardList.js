@@ -9,14 +9,13 @@ const MoviesCardList = (props) => {
     <section className="card-list">
       {props.isLoading ? <Preloader /> :
         props.cards.length > 0 ?
-          <ul className={`cards ${props.displayCards ? 'show-cards' : 'hide-block'}`}>
+          <ul className={`cards ${props.displayCards || props.isSavedMovies ? 'show-cards' : 'hide-block'}`}>
             {props.cards.map((filmInfo) => (
               <MoviesCard
                 film={filmInfo}
                 key={filmInfo.movieId}
                 isSavedMovies={props.isSavedMovies}
                 isFilmSaved={props.savedFilms.some((film) => film.movieId === filmInfo.movieId)}
-                // savedFilm={props.savedFilms.find((film) => film.movieId === filmInfo.movieId)}
                 savedFilms={props.savedFilms}
                 setIsFilmSaved={props.setIsFilmSaved}
                 onSaveFilm={props.onSaveFilm}
