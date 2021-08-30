@@ -371,10 +371,8 @@ const App = () => {
             component={PageNotFound}
           />
           <Route>
-            {/* {!loggedIn && (<Redirect to="/signin" />)} */}
             {!loggedIn && (<Redirect to="/" />)}
           </Route>
-          {/* <Redirect to="/not-found" /> */}
         </Switch>
 
         <Menu
