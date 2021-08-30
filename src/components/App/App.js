@@ -150,7 +150,6 @@ const App = () => {
           });
           checkAuth();
           setLoggedIn(true);
-          // history.push("/movies");
         }
       })
       .catch((err) => {
@@ -194,14 +193,6 @@ const App = () => {
         if (userData) {
           setCurrentUser(userData);
           setLoggedIn(true);
-          // history.push("/movies");
-          // console.log(location.pathname);
-          // console.log(loggedIn);
-          // if (loggedIn) {
-          //   history.push(location.pathname);
-          // } else {
-          //   history.push("/movies");
-          // }
           history.push(location.pathname === '/signup'
             || location.pathname === '/signin'
             ? '/movies' : location.pathname === '/movies'
@@ -209,15 +200,10 @@ const App = () => {
               || location.pathname === '/profile'
               ? location.pathname
               : '/not-found');
-          // console.log(location.pathname);
         }
       })
       .catch((err) => console.log(err));
   }
-
-  // const selectLocationPath = () => {
-
-  // };
 
   const handleEditProfile = (data) => {
     setIsLoading(true);
@@ -266,10 +252,6 @@ const App = () => {
         console.log(err);
       });
   };
-
-  // useEffect(() => {
-  //   console.log(location.pathname);
-  // }, [location]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -389,9 +371,10 @@ const App = () => {
             component={PageNotFound}
           />
           <Route>
-            {!loggedIn && (<Redirect to="/signin" />)}
+            {/* {!loggedIn && (<Redirect to="/signin" />)} */}
+            {!loggedIn && (<Redirect to="/" />)}
           </Route>
-          <Redirect to="/not-found" />
+          {/* <Redirect to="/not-found" /> */}
         </Switch>
 
         <Menu
