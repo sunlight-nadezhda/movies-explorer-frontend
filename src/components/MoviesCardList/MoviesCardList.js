@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './MoviesCardList.css';
 import Preloader from "../Preloader/Preloader";
 import MoviesCard from '../MoviesCard/MoviesCard';
@@ -34,5 +35,13 @@ const MoviesCardList = (props) => {
     </section>
   );
 }
+
+MoviesCardList.propTypes = {
+  savedFilms: PropTypes.arrayOf(PropTypes.object).isRequired
+};
+
+MoviesCardList.defaultProps = {
+  savedFilms: []
+};
 
 export default MoviesCardList;

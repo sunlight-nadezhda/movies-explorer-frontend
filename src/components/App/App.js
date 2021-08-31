@@ -26,9 +26,8 @@ const {
   numberAddForMoreButtonOnDesctop,
 } = constants;
 
-console.log(durationBeatFilm);
-
 const App = () => {
+  // const [films, setFilms] = useState([]);
   const [savedFilms, setSavedFilms] = useState([]);
   const [visibleСards, setVisibleCards] = useState([]);
   const [filteredFilms, setFilteredFilms] = useState([]);
@@ -106,6 +105,9 @@ const App = () => {
       if (localFilms === null) {
         localStorage.setItem('films', JSON.stringify(films));
       }
+
+      // setFilms(films);
+      return films;
       // const selectedFilms = films.filter(({ nameRU, duration }) => {
       //   if (isBeatFilm && duration > durationBeatFilm) return false;
       //   return nameRU.toLowerCase().includes(keyWord.toLowerCase());
@@ -121,10 +123,35 @@ const App = () => {
     }
   };
 
-  const handleGetFilms = async (isBeatFilm, keyWord, films) => {
+  const getSavedFilms = async () => {
+    try {
+      const savedFilms = await api.getSavedFilms();
+      return savedFilms;
+    } catch (err) {
+      setShowError(true);
+      setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+      console.log(err)
+    }
+
+
+    // setSavedFilms(savedFilms);
+    // setIsLoading(false);
+    // setDisplayCards(true);
+    // setWasRequest(true);
+  };
+
+  const handleGetFilms = async (isBeatFilm, keyWord, isSavedMoviesPage) => {
     setIsLoading(true);
     const numberCards = handleActualResize();
-    getAllFilms();
+    console.log('savedFilms', getSavedFilms());
+    const films = isSavedMoviesPage ? await getSavedFilms() : await getAllFilms();
+    console.log('films', films);
+    console.log('savedFilms', getSavedFilms());
+
+    setSavedFilms(savedFilms);
+    setIsLoading(false);
+    setDisplayCards(true);
+    setWasRequest(true);
 
     const selectedFilms = films.filter(({ nameRU, duration }) => {
       if (isBeatFilm && duration > durationBeatFilm) return false;
@@ -300,21 +327,15 @@ const App = () => {
   };
 
   useEffect(() => {
+    if (!loggedIn) return;
     setIsLoading(true);
-    if (loggedIn) {
-      api.getSavedFilms()
-        .then(dataFilms => {
-          setSavedFilms(dataFilms);
-          setIsLoading(false);
-          setDisplayCards(true);
-          setWasRequest(true);
-        })
-        .catch((err) => {
-          setShowError(true);
-          setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-          console.log(err);
-        });
-    }
+    (async () => {
+      const films = await getSavedFilms();
+      setSavedFilms(films);
+      setIsLoading(false);
+      setDisplayCards(true);
+      setWasRequest(true);
+    })();
   }, [loggedIn]);
 
   useEffect(() => {
@@ -384,6 +405,7 @@ const App = () => {
             errorText={errorText}
             wasRequest={wasRequest}
             cards={visibleСards}
+            // allFilms={films}
             displayMore={displayMore}
             onAddCards={handleAddMoreByClick}
             onSaveFilm={handleSaveFilm}

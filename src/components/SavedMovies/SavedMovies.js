@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './SavedMovies.css';
 import Header from "../Header/Header";
 import SearchForm from "../SearchForm/SearchForm";
@@ -13,7 +14,7 @@ const SavedMovies = (props) => {
         onOpenMenu={props.onOpenMenu}
       />
       <main>
-        <SearchForm onGetFilms={props.onGetFilms} films={props.cards} />
+        <SearchForm onGetFilms={props.onGetFilms} isSavedMoviesPage={true} />
         <MoviesCardList
           cards={props.cards}
           isSavedMovies={props.isSavedMovies}
@@ -26,5 +27,14 @@ const SavedMovies = (props) => {
     </div>
   );
 }
+
+SavedMovies.propTypes = {
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired
+};
+
+SavedMovies.defaultProps = {
+  cards: []
+};
+
 
 export default SavedMovies;

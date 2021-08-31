@@ -15,7 +15,7 @@ const SearchForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!!searchedFilm) props.onGetFilms(isBeatFilm, searchedFilm, props.films);
+    if (!!searchedFilm) props.onGetFilms(isBeatFilm, searchedFilm, props.isSavedMoviesPage);
 
     setShowError(!searchedFilm);
     setSearchedFilm('');
