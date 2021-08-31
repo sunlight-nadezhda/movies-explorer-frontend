@@ -14,7 +14,14 @@ const SavedMovies = (props) => {
         onOpenMenu={props.onOpenMenu}
       />
       <main>
-        <SearchForm onGetFilms={props.onGetFilms} isSavedMoviesPage={true} />
+        <SearchForm
+          onGetFilms={props.onGetFilms}
+          isSavedMoviesPage={true}
+          isBeatFilm={props.isBeatFilm}
+          setIsBeatFilm={props.setIsBeatFilm}
+          keyWord={props.keyWord}
+          setKeyWord={props.setKeyWord}
+        />
         <MoviesCardList
           cards={props.cards}
           isSavedMovies={props.isSavedMovies}

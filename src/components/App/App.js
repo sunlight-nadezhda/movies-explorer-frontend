@@ -42,6 +42,8 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isBeatFilm, setIsBeatFilm] = useState(true);
+  const [keyWord, setKeyWord] = useState('');
   const history = useHistory();
   let location = useLocation();
 
@@ -143,10 +145,11 @@ const App = () => {
   const handleGetFilms = async (isBeatFilm, keyWord, isSavedMoviesPage) => {
     setIsLoading(true);
     const numberCards = handleActualResize();
-    console.log('savedFilms', getSavedFilms());
-    const films = isSavedMoviesPage ? await getSavedFilms() : await getAllFilms();
+    const savedFilms = await getSavedFilms();
+    console.log('savedFilms', savedFilms);
+    const films = isSavedMoviesPage ? savedFilms : await getAllFilms();
     console.log('films', films);
-    console.log('savedFilms', getSavedFilms());
+    console.log('savedFilms', savedFilms);
 
     setSavedFilms(savedFilms);
     setIsLoading(false);
@@ -410,17 +413,26 @@ const App = () => {
             onAddCards={handleAddMoreByClick}
             onSaveFilm={handleSaveFilm}
             onDeleteFilm={handleDeleteFilm}
+            isBeatFilm={isBeatFilm}
+            setIsBeatFilm={setIsBeatFilm}
+            keyWord={keyWord}
+            setKeyWord={setKeyWord}
           />
           <ProtectedRoute
             path="/saved-movies"
             loggedIn={loggedIn}
             component={SavedMovies}
-            cards={savedFilms}
+            // cards={savedFilms}
+            cards={filteredFilms}
             isSavedMovies={true}
             onOpenMenu={handleOpenMenu}
             onGetFilms={handleGetFilms}
             displayCards={true}
             onDeleteFilm={handleDeleteFilm}
+            isBeatFilm={isBeatFilm}
+            setIsBeatFilm={setIsBeatFilm}
+            keyWord={keyWord}
+            setKeyWord={setKeyWord}
           />
           <ProtectedRoute
             path="/profile"

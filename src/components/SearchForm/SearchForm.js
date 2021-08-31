@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
@@ -13,13 +13,21 @@ const SearchForm = (props) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     if (!!searchedFilm) props.onGetFilms(isBeatFilm, searchedFilm, props.isSavedMoviesPage);
 
     setShowError(!searchedFilm);
     setSearchedFilm('');
+    props.setIsBeatFilm(isBeatFilm);
+    props.setKeyWord(searchedFilm);
   };
+
+  useEffect(() => {
+    setSearchedFilm(props.keyWord);
+    setIsBeatFilm(isBeatFilm);
+    handleSubmit();
+  }, []);
 
   return (
     <section className="search">
