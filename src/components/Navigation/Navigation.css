@@ -1,7 +1,7 @@
 .navigation {
   display: flex;
   column-gap: 16px;
-  margin: 0 364px 0 426px;
+  margin: 0 364px 0 auto;
 }
 
 .navigation__link {
