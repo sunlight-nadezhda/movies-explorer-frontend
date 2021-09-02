@@ -161,17 +161,6 @@ const App = () => {
       return nameRU.toLowerCase().includes(keyWord.toLowerCase());
     });
 
-  // const handleGetFilms = () => {
-  //   setIsLoading(true);
-  //   setIsLoading(false);
-  //   setDisplayCards(true);
-  //   setWasRequest(true);
-  //   setVisibleCardCount(numberCards.maxFirstShowCards);
-  //   setIsLoading(false);
-  //   setDisplayCards(true);
-  //   setWasRequest(true);
-  // };
-
   const collection = location.pathname === '/saved-movies'
     ? savedFilms
     : films;
@@ -186,19 +175,16 @@ const App = () => {
     return filteredCards;
   };
 
+  let filteredCards = getFilteredFilms(collection, searchKeyword, isBeatFilm);
+
   let visibleСards = getVisibleCards(collection, searchKeyword, isBeatFilm);
 
   const handleSearchSubmit = (keyword) => {
     setSearchKeyword(keyword);
-    // TODO: start search
     setIsLoading(true);
-    console.log('keyword', keyword);
-    console.log('isBeatFilm', isBeatFilm);
-    console.log('collection', collection);
     setSearchKeyword(keyword);
+    filteredCards = getFilteredFilms(collection, searchKeyword, isBeatFilm);
     visibleСards = getVisibleCards(collection, keyword, isBeatFilm);
-    console.log('searchKeyword', searchKeyword);
-    console.log('visibleСards', visibleСards);
     setIsLoading(false);
     setDisplayCards(true);
     setWasRequest(true);
@@ -342,10 +328,14 @@ const App = () => {
     if (location.pathname === '/saved-movies') {
       return;
     }
+    console.log('visibleСards', visibleСards);
+    console.log('collection', collection);
+    console.log('filteredCards', filteredCards);
     if (
       visibleСards.length &&
       collection.length &&
-      visibleСards[visibleСards.length - 1].movieId !== collection[collection.length - 1].movieId)
+      // visibleСards[visibleСards.length - 1].movieId !== filteredCards[filteredCards.length - 1].movieId)
+      visibleСards.length < filteredCards.length)
     {
       setDisplayMore(true);
     } else {
