@@ -5,3 +5,11 @@
   line-height: 12px;
   color: #FF4062;
 }
+
+.error-message_hide {
+  display: none;
+}
+
+.error-message_show {
+  display: block;
+}

@@ -23,9 +23,9 @@ const MoviesCardList = (props) => {
                 onDeleteFilm={props.onDeleteFilm}
               />
             ))}
-          </ul> : props.showError
+          </ul> : props.isErrorVisible
             ? <ErrorMessage
-              showError={props.showError}
+              isErrorVisible={props.isErrorVisible}
               text={props.errorText}
             />
             : props.wasRequest

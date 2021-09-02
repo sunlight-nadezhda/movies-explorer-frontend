@@ -49,7 +49,7 @@ const SearchForm = (props) => {
         <input type="submit" value="" className="search__submit" />
         <FilterCheckbox value={isBeatFilm} onChange={onIsBeatFilmChanged} />
       </form>
-      <ErrorMessage text="Нужно ввести ключевое слово" showError={hasError} />
+      <ErrorMessage text="Нужно ввести ключевое слово" isErrorVisible={hasError} />
       <hr className="search__line" />
     </section>
   );

@@ -31,7 +31,6 @@ const SavedMovies = (props) => {
       />
       <main>
         <SearchForm
-          isSavedMoviesPage={true}
           initialKeyword={searchKeyword}
           isBeatFilm={isBeatFilm}
           onSubmit={onSearchSubmit}

@@ -50,7 +50,6 @@ const getDisplayCardsAmount = () => {
 const App = () => {
   const [films, setFilms] = useState([]);
   const [savedFilms, setSavedFilms] = useState([]);
-  const [filteredFilms, setFilteredFilms] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [displayCards, setDisplayCards] = useState(true);
@@ -58,7 +57,7 @@ const App = () => {
   const [displayMore, setDisplayMore] = useState(false);
   const [numberCards, setNumberCards] = useState(getDisplayCardsAmount());
   const [errorText, setErrorText] = useState(null);
-  const [showError, setShowError] = useState(false);
+  const [isErrorVisible, setIsErrorVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -131,9 +130,8 @@ const App = () => {
       }
       return films;
     } catch (err) {
-      setShowError(true);
+      setIsErrorVisible(true);
       setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-      setFilteredFilms([]);
       setVisibleCardCount(0);
       console.log(err);
     }
@@ -144,7 +142,7 @@ const App = () => {
       const savedFilms = await api.getSavedFilms();
       return savedFilms;
     } catch (err) {
-      setShowError(true);
+      setIsErrorVisible(true);
       setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
       console.log(err)
     }
@@ -163,18 +161,42 @@ const App = () => {
       return nameRU.toLowerCase().includes(keyWord.toLowerCase());
     });
 
-  const handleGetFilms = () => {
-    setIsLoading(true);
-    setIsLoading(false);
-    setDisplayCards(true);
-    setWasRequest(true);
-    const selectedFilms = getFilteredFilms([]);
-    setFilteredFilms(selectedFilms);
-    setVisibleCardCount(numberCards.maxFirstShowCards);
-    setIsLoading(false);
-    setDisplayCards(true);
-    setWasRequest(true);
+  // const handleGetFilms = () => {
+  //   setIsLoading(true);
+  //   setIsLoading(false);
+  //   setDisplayCards(true);
+  //   setWasRequest(true);
+  //   setVisibleCardCount(numberCards.maxFirstShowCards);
+  //   setIsLoading(false);
+  //   setDisplayCards(true);
+  //   setWasRequest(true);
+  // };
+
+  const collection = location.pathname === '/saved-movies'
+    ? savedFilms
+    : films;
+
+  // TODO: move to Movies.js
+
+  const getVisibleCards = (collection, keyword, isBeatFilm) => {
+    if (location.pathname === '/saved-movies') return [];
+    if (!keyword) return [];
+    let filteredCards = filterFilms(collection, keyword, isBeatFilm);
+    filteredCards = filteredCards.filter(((v, k) => k < visibleCardCount));
+    return filteredCards;
   };
+
+  const visibleСards = getVisibleCards(collection, searchKeyword, isBeatFilm);
+
+  const handleSearchSubmit = (keyword) => {
+    setIsLoading(true);
+    setSearchKeyword(keyword);
+    // TODO: start search
+  };
+
+  const handleIsBeatFilmChanged = (value) => {
+    setIsBeatFilm(value);
+  }
 
   const handleAddMoreByClick = () => {
     if (collection.length) {
@@ -195,7 +217,7 @@ const App = () => {
         }
       })
       .catch((err) => {
-        setShowError(true);
+        setIsErrorVisible(true);
         setErrorText(err.message);
         console.log(err);
       });
@@ -209,7 +231,7 @@ const App = () => {
         }
       })
       .catch((err) => {
-        setShowError(true);
+        setIsErrorVisible(true);
         setErrorText(err.message);
         console.log(err);
       });
@@ -257,7 +279,7 @@ const App = () => {
         setShowSuccessMessage(true);
       })
       .catch((err) => {
-        setShowError(true);
+        setIsErrorVisible(true);
         setErrorText(err.message);
         console.log(err);
       });
@@ -273,7 +295,7 @@ const App = () => {
         setWasRequest(true);
       })
       .catch((err) => {
-        setShowError(true);
+        setIsErrorVisible(true);
         setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
         console.log(err);
       });
@@ -290,7 +312,7 @@ const App = () => {
         setWasRequest(true);
       })
       .catch((err) => {
-        setShowError(true);
+        setIsErrorVisible(true);
         setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
         console.log(err);
       });
@@ -304,22 +326,6 @@ const App = () => {
       setSavedFilms(savedFilms);
     })();
   }, [loggedIn]);
-
-  const collection = location.pathname === '/saved-movies'
-    ? savedFilms
-    : films;
-
-  // TODO: move to Movies.js
-
-  const getVisibleCards = (collection, keyword, isBeatFilm) => {
-    if (location.pathname === '/saved-movies') return [];
-    if (!keyword) return [];
-    let filteredCards = filterFilms(collection, keyword, isBeatFilm);
-    filteredCards = filteredCards.filter(((v, k) => k < visibleCardCount));
-    return filteredCards;
-  };
-
-  const visibleСards = getVisibleCards(collection, searchKeyword, isBeatFilm);
 
   useEffect(() => {
     if (location.pathname === '/saved-movies') {
@@ -357,16 +363,6 @@ const App = () => {
     checkAuth();
   }, []);
 
-
-  const handleSearchSubmit = (keyword) => {
-    setSearchKeyword(keyword);
-    // TODO: start search
-  };
-
-  const handleIsBeatFilmChanged = (value) => {
-    setIsBeatFilm(value);
-  }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -374,14 +370,14 @@ const App = () => {
           <Route path="/signup">
             <Register
               onRegister={onRegister}
-              showError={showError}
+              isErrorVisible={isErrorVisible}
               errorText={errorText}
             />
           </Route>
           <Route path="/signin">
             <Login
               onLogin={onLogin}
-              showError={showError}
+              isErrorVisible={isErrorVisible}
               errorText={errorText}
             />
           </Route>
@@ -394,13 +390,11 @@ const App = () => {
             path="/movies"
             loggedIn={loggedIn}
             component={Movies}
-            isSavedMovies={false}
             savedFilms={savedFilms}
             onOpenMenu={handleOpenMenu}
-            onGetFilms={handleGetFilms}
             isLoading={isLoading}
             displayCards={displayCards}
-            showError={showError}
+            isErrorVisible={isErrorVisible}
             errorText={errorText}
             wasRequest={wasRequest}
             cards={visibleСards}
@@ -434,7 +428,7 @@ const App = () => {
             onOpenMenu={handleOpenMenu}
             onEditProfile={handleEditProfile}
             onSignOut={onSignOut}
-            showError={showError}
+            isErrorVisible={isErrorVisible}
             errorText={errorText}
             showSuccessMessage={showSuccessMessage}
           />
