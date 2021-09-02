@@ -5,8 +5,24 @@ import Header from "../Header/Header";
 import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
+import { filterByKeyword, filterBeatFilms } from '../filterFilms';
 
 const SavedMovies = (props) => {
+  const {
+    isBeatFilm,
+    searchKeyword,
+    cards,
+    onSearchSubmit,
+    onIsBeatFilmChanged
+  } = props;
+
+  let filteredCards = cards;
+  if (isBeatFilm) {
+    filteredCards = filterBeatFilms(filteredCards)
+  }
+  if (searchKeyword !== '') {
+    filteredCards = filterByKeyword(filteredCards, searchKeyword)
+  }
   return (
     <div className="page">
       <Header
@@ -15,18 +31,17 @@ const SavedMovies = (props) => {
       />
       <main>
         <SearchForm
-          onGetFilms={props.onGetFilms}
           isSavedMoviesPage={true}
-          isBeatFilm={props.isBeatFilm}
-          setIsBeatFilm={props.setIsBeatFilm}
-          keyWord={props.keyWord}
-          setKeyWord={props.setKeyWord}
+          initialKeyword={searchKeyword}
+          isBeatFilm={isBeatFilm}
+          onSubmit={onSearchSubmit}
+          onIsBeatFilmChanged={onIsBeatFilmChanged}
         />
         <MoviesCardList
-          cards={props.cards}
-          isSavedMovies={props.isSavedMovies}
-          savedFilms={props.cards}
-          displayCards={props.displayCards}
+          cards={filteredCards}
+          isSavedMovies={true}
+          savedFilms={filteredCards}
+          displayCards={true}
           onDeleteFilm={props.onDeleteFilm}
         />
       </main>
@@ -36,12 +51,11 @@ const SavedMovies = (props) => {
 }
 
 SavedMovies.propTypes = {
-  cards: PropTypes.arrayOf(PropTypes.object).isRequired
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isBeatFilm: PropTypes.bool.isRequired,
+  searchKeyword: PropTypes.string.isRequired,
+  onSearchSubmit: PropTypes.func.isRequired,
+  onIsBeatFilmChanged: PropTypes.func.isRequired
 };
-
-SavedMovies.defaultProps = {
-  cards: []
-};
-
 
 export default SavedMovies;

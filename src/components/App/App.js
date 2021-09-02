@@ -14,6 +14,7 @@ import api from '../../utils/MainApi';
 import { CurrentUserContext } from '../../utils/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { constants } from '../../utils/constants';
+import { filterFilms } from '../filterFilms';
 
 const {
   durationBeatFilm,
@@ -26,26 +27,47 @@ const {
   numberAddForMoreButtonOnDesctop,
 } = constants;
 
+const getDisplayCardsAmount = () => {
+  const screenWidth = window.screen.width;
+  if (screenWidth < smallScreenWidth) {
+    return {
+      maxFirstShowCards: maxFirstShowCardsOnMobile,
+      numberAdd: numberAddForMoreButtonOnMobile,
+    };
+  } else if (screenWidth < mediumScreenWidth) {
+    return {
+      maxFirstShowCards: maxFirstShowCardsOnNotebook,
+      numberAdd: numberAddForMoreButtonOnMobile,
+    };
+  } else {
+    return {
+      maxFirstShowCards: maxFirstShowCardsOnDesctop,
+      numberAdd: numberAddForMoreButtonOnDesctop,
+    };
+  }
+};
+
 const App = () => {
-  // const [films, setFilms] = useState([]);
+  const [films, setFilms] = useState([]);
   const [savedFilms, setSavedFilms] = useState([]);
-  const [visibleСards, setVisibleCards] = useState([]);
   const [filteredFilms, setFilteredFilms] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [displayCards, setDisplayCards] = useState(false);
+  const [displayCards, setDisplayCards] = useState(true);
   const [wasRequest, setWasRequest] = useState(false);
   const [displayMore, setDisplayMore] = useState(false);
-  const [numberCards, setNumberCards] = useState(null);
+  const [numberCards, setNumberCards] = useState(getDisplayCardsAmount());
   const [errorText, setErrorText] = useState(null);
   const [showError, setShowError] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isBeatFilm, setIsBeatFilm] = useState(true);
-  const [keyWord, setKeyWord] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [visibleCardCount, setVisibleCardCount] = useState(numberCards.maxFirstShowCards);
+
   const history = useHistory();
-  let location = useLocation();
+  const location = useLocation();
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
@@ -107,20 +129,12 @@ const App = () => {
       if (localFilms === null) {
         localStorage.setItem('films', JSON.stringify(films));
       }
-
-      // setFilms(films);
       return films;
-      // const selectedFilms = films.filter(({ nameRU, duration }) => {
-      //   if (isBeatFilm && duration > durationBeatFilm) return false;
-      //   return nameRU.toLowerCase().includes(keyWord.toLowerCase());
-      // });
-      // setFilteredFilms(selectedFilms);
-      // setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
     } catch (err) {
       setShowError(true);
       setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
       setFilteredFilms([]);
-      setVisibleCards([]);
+      setVisibleCardCount(0);
       console.log(err);
     }
   };
@@ -134,85 +148,37 @@ const App = () => {
       setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
       console.log(err)
     }
-
-
-    // setSavedFilms(savedFilms);
-    // setIsLoading(false);
-    // setDisplayCards(true);
-    // setWasRequest(true);
   };
 
-  const handleGetFilms = async (isBeatFilm, keyWord, isSavedMoviesPage) => {
-    setIsLoading(true);
-    const numberCards = handleActualResize();
+  const getFilms = async () => {
+    const allFilms = await getAllFilms();
     const savedFilms = await getSavedFilms();
-    console.log('savedFilms', savedFilms);
-    const films = isSavedMoviesPage ? savedFilms : await getAllFilms();
-    console.log('films', films);
-    console.log('savedFilms', savedFilms);
+    return { allFilms, savedFilms };
+  };
 
-    setSavedFilms(savedFilms);
-    setIsLoading(false);
-    setDisplayCards(true);
-    setWasRequest(true);
-
-    const selectedFilms = films.filter(({ nameRU, duration }) => {
+  // TODO: delete and use from another file
+  const getFilteredFilms = (collection, keyWord, isBeatFilm) => collection
+    .filter(({ nameRU, duration }) => {
       if (isBeatFilm && duration > durationBeatFilm) return false;
       return nameRU.toLowerCase().includes(keyWord.toLowerCase());
     });
-    setFilteredFilms(selectedFilms);
-    setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
-    // const localFilms = getFilmsFromLocalStorage();
-    // try {
-    //   const films = localFilms === null
-    //     ? await getFilmsFromApi()
-    //     : localFilms;
-    //   if (localFilms === null) {
-    //     localStorage.setItem('films', JSON.stringify(films));
-    //   }
-    //   const selectedFilms = films.filter(({ nameRU, duration }) => {
-    //     if (isBeatFilm && duration > durationBeatFilm) return false;
-    //     return nameRU.toLowerCase().includes(keyWord.toLowerCase());
-    //   });
-    //   setFilteredFilms(selectedFilms);
-    //   setVisibleCards(selectedFilms.filter((v, k) => k < numberCards.maxFirstShowCards));
-    // } catch (err) {
-    //   setShowError(true);
-    //   setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-    //   setFilteredFilms([]);
-    //   setVisibleCards([]);
-    //   console.log(err);
-    // }
+
+  const handleGetFilms = () => {
+    setIsLoading(true);
     setIsLoading(false);
     setDisplayCards(true);
     setWasRequest(true);
-    setNumberCards(numberCards);
-  };
-
-  const handleActualResize = () => {
-    const screenWidth = window.screen.width;
-    if (screenWidth < smallScreenWidth) {
-      return {
-        maxFirstShowCards: maxFirstShowCardsOnMobile,
-        numberAdd: numberAddForMoreButtonOnMobile,
-      };
-    } else if (screenWidth < mediumScreenWidth) {
-      return {
-        maxFirstShowCards: maxFirstShowCardsOnNotebook,
-        numberAdd: numberAddForMoreButtonOnMobile,
-      };
-    } else {
-      return {
-        maxFirstShowCards: maxFirstShowCardsOnDesctop,
-        numberAdd: numberAddForMoreButtonOnDesctop,
-      };
-    }
+    const selectedFilms = getFilteredFilms([]);
+    setFilteredFilms(selectedFilms);
+    setVisibleCardCount(numberCards.maxFirstShowCards);
+    setIsLoading(false);
+    setDisplayCards(true);
+    setWasRequest(true);
   };
 
   const handleAddMoreByClick = () => {
-    console.log(filteredFilms.length);
-    if (filteredFilms.length) {
-      setVisibleCards(filteredFilms.filter((v, k) => k < visibleСards.length + numberCards.numberAdd));
+    if (collection.length) {
+      setVisibleCardCount(visibleCardCount + numberCards.numberAdd);
     }
   };
 
@@ -271,6 +237,7 @@ const App = () => {
           setLoggedIn(true);
           history.push(location.pathname === '/signup'
             || location.pathname === '/signin'
+            || location.pathname === '/'
             ? '/movies' : location.pathname === '/movies'
               || location.pathname === '/saved-movies'
               || location.pathname === '/profile'
@@ -300,7 +267,7 @@ const App = () => {
     setIsLoading(true);
     api.saveFilm(film)
       .then(dataFilm => {
-        setSavedFilms([...savedFilms, dataFilm]);
+        setSavedFilms([...savedFilms, dataFilm]); // TODO: Check is setSavedFilms needed
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -317,7 +284,7 @@ const App = () => {
     const deletedFilm = savedFilms.find((film) => film.movieId === clickedFilm.movieId);
     api.deleteFilm(deletedFilm._id)
       .then(dataFilm => {
-        setSavedFilms((state) => state.filter((c) => c._id !== deletedFilm._id));
+        setSavedFilms((state) => state.filter((c) => c._id !== deletedFilm._id)); // TODO: Check is setSavedFilms needed
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -331,23 +298,44 @@ const App = () => {
 
   useEffect(() => {
     if (!loggedIn) return;
-    setIsLoading(true);
     (async () => {
-      const films = await getSavedFilms();
-      setSavedFilms(films);
-      setIsLoading(false);
-      setDisplayCards(true);
-      setWasRequest(true);
+      const { allFilms, savedFilms } = await getFilms();
+      setFilms(allFilms);
+      setSavedFilms(savedFilms);
     })();
   }, [loggedIn]);
 
+  const collection = location.pathname === '/saved-movies'
+    ? savedFilms
+    : films;
+
+  // TODO: move to Movies.js
+
+  const getVisibleCards = (collection, keyword, isBeatFilm) => {
+    if (location.pathname === '/saved-movies') return [];
+    if (!keyword) return [];
+    let filteredCards = filterFilms(collection, keyword, isBeatFilm);
+    filteredCards = filteredCards.filter(((v, k) => k < visibleCardCount));
+    return filteredCards;
+  };
+
+  const visibleСards = getVisibleCards(collection, searchKeyword, isBeatFilm);
+
   useEffect(() => {
-    if (visibleСards.length && filteredFilms.length && visibleСards[visibleСards.length - 1].movieId !== filteredFilms[filteredFilms.length - 1].movieId) {
+    if (location.pathname === '/saved-movies') {
+      return;
+    }
+    if (
+      visibleСards.length &&
+      collection.length &&
+      visibleСards[visibleСards.length - 1].movieId !== collection[collection.length - 1].movieId)
+    {
       setDisplayMore(true);
     } else {
       setDisplayMore(false);
     }
-  }, [visibleСards, filteredFilms]);
+  }, [collection, visibleСards, location.pathname]);
+  // END of TODO
 
   useEffect(() => {
     let resizeTimeout;
@@ -355,13 +343,11 @@ const App = () => {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          setNumberCards(handleActualResize());
+          setNumberCards(getDisplayCardsAmount());
         }, 67);
       }
     };
-
     window.addEventListener('resize', resizeThrottler);
-
     return () => {
       window.removeEventListener('resize', resizeThrottler);
     };
@@ -370,6 +356,16 @@ const App = () => {
   useEffect(() => {
     checkAuth();
   }, []);
+
+
+  const handleSearchSubmit = (keyword) => {
+    setSearchKeyword(keyword);
+    // TODO: start search
+  };
+
+  const handleIsBeatFilmChanged = (value) => {
+    setIsBeatFilm(value);
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -408,31 +404,27 @@ const App = () => {
             errorText={errorText}
             wasRequest={wasRequest}
             cards={visibleСards}
-            // allFilms={films}
             displayMore={displayMore}
             onAddCards={handleAddMoreByClick}
             onSaveFilm={handleSaveFilm}
             onDeleteFilm={handleDeleteFilm}
             isBeatFilm={isBeatFilm}
-            setIsBeatFilm={setIsBeatFilm}
-            keyWord={keyWord}
-            setKeyWord={setKeyWord}
+            filteredFilms={getFilteredFilms(collection, searchKeyword, isBeatFilm)}
+            searchKeyword={searchKeyword}
+            onSearchSubmit={handleSearchSubmit}
+            onIsBeatFilmChanged={handleIsBeatFilmChanged}
           />
           <ProtectedRoute
             path="/saved-movies"
             loggedIn={loggedIn}
             component={SavedMovies}
-            // cards={savedFilms}
-            cards={filteredFilms}
-            isSavedMovies={true}
-            onOpenMenu={handleOpenMenu}
-            onGetFilms={handleGetFilms}
-            displayCards={true}
-            onDeleteFilm={handleDeleteFilm}
+            cards={collection}
             isBeatFilm={isBeatFilm}
-            setIsBeatFilm={setIsBeatFilm}
-            keyWord={keyWord}
-            setKeyWord={setKeyWord}
+            searchKeyword={searchKeyword}
+            onOpenMenu={handleOpenMenu}
+            onDeleteFilm={handleDeleteFilm}
+            onSearchSubmit={handleSearchSubmit}
+            onIsBeatFilmChanged={handleIsBeatFilmChanged}
           />
           <ProtectedRoute
             path="/profile"

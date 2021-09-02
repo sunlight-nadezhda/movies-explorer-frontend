@@ -1,33 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 const SearchForm = (props) => {
-  const [searchedFilm, setSearchedFilm] = useState('');
-  const [showError, setShowError] = useState(false);
-  const [isBeatFilm, setIsBeatFilm] = useState(true);
+  const {
+    initialKeyword,
+    isBeatFilm,
+    onIsBeatFilmChanged,
+    onSubmit,
+  } = props;
 
-  const getSearchedFilm = (e) => {
-    setSearchedFilm(e.target.value);
+  const [keyword, setKeyword] = useState(initialKeyword);
+
+  const [hasError, setHasError] = useState(false);
+
+  const handleInput = (e) => {
+    setKeyword(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    if (e) e.preventDefault();
-
-    if (!!searchedFilm) props.onGetFilms(isBeatFilm, searchedFilm, props.isSavedMoviesPage);
-
-    setShowError(!searchedFilm);
-    setSearchedFilm('');
-    props.setIsBeatFilm(isBeatFilm);
-    props.setKeyWord(searchedFilm);
+    e.preventDefault();
+    setHasError(!keyword);
+    if (!!keyword) onSubmit(keyword);
   };
-
-  useEffect(() => {
-    setSearchedFilm(props.keyWord);
-    setIsBeatFilm(isBeatFilm);
-    handleSubmit();
-  }, []);
 
   return (
     <section className="search">
@@ -43,19 +40,31 @@ const SearchForm = (props) => {
           type="search"
           id="site-search"
           name="site-search"
-          value={searchedFilm}
+          value={keyword}
           placeholder="Фильм"
           className="search__input"
-          onChange={getSearchedFilm}
+          onChange={handleInput}
           required
         />
         <input type="submit" value="" className="search__submit" />
-        <FilterCheckbox setIsBeatFilm={setIsBeatFilm} />
+        <FilterCheckbox value={isBeatFilm} onChange={onIsBeatFilmChanged} />
       </form>
-      <ErrorMessage text="Нужно ввести ключевое слово" showError={showError} />
+      <ErrorMessage text="Нужно ввести ключевое слово" showError={hasError} />
       <hr className="search__line" />
     </section>
   );
 }
+
+SearchForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onIsBeatFilmChanged: PropTypes.func.isRequired,
+  initialKeyword: PropTypes.string,
+  initialIsBeatFilm: PropTypes.bool,
+};
+
+SearchForm.defaultProps = {
+  initialKeyword: '',
+  initialIsBeatFilm: true,
+};
 
 export default SearchForm;

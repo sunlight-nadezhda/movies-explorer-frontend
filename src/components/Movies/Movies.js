@@ -6,7 +6,16 @@ import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import More from "../More/More";
 
+
+
 const Movies = (props) => {
+  const {
+    isBeatFilm,
+    searchKeyword,
+    cards,
+    onSearchSubmit,
+    onIsBeatFilmChanged
+  } = props;
   return (
     <div className="page">
       <Header
@@ -17,10 +26,13 @@ const Movies = (props) => {
         <SearchForm
           onGetFilms={props.onGetFilms}
           isSavedMoviesPage={false}
-          isBeatFilm={props.isBeatFilm}
+          isBeatFilm={isBeatFilm}
           setIsBeatFilm={props.setIsBeatFilm}
           keyWord={props.keyWord}
           setKeyWord={props.setKeyWord}
+          initialKeyword={searchKeyword}
+          onSubmit={onSearchSubmit}
+          onIsBeatFilmChanged={onIsBeatFilmChanged}
         />
         <MoviesCardList
           isSavedMovies={props.isSavedMovies}
@@ -30,7 +42,7 @@ const Movies = (props) => {
           isLoading={props.isLoading}
           showError={props.showError}
           wasRequest={props.wasRequest}
-          cards={props.cards}
+          cards={cards}
           onSaveFilm={props.onSaveFilm}
           onDeleteFilm={props.onDeleteFilm}
           errorText={props.errorText}
