@@ -14,7 +14,7 @@ import api from '../../utils/MainApi';
 import { CurrentUserContext } from '../../utils/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { constants } from '../../utils/constants';
-import { filterFilms } from '../filterFilms';
+import { filterFilms } from '../../utils/filterFilms';
 
 const {
   durationBeatFilm,

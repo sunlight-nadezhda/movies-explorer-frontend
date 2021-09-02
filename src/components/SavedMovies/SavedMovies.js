@@ -5,7 +5,7 @@ import Header from "../Header/Header";
 import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import { filterByKeyword, filterBeatFilms } from '../filterFilms';
+import { filterByKeyword, filterBeatFilms } from '../../utils/filterFilms';
 
 const SavedMovies = (props) => {
   const {
