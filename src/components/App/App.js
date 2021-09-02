@@ -154,6 +154,26 @@ const App = () => {
     return { allFilms, savedFilms };
   };
 
+  const getKeywordFromLocalStorage = () => {
+    const rawKeyword = localStorage.getItem('keyword');
+    if (!rawKeyword) return null;
+    try {
+      return JSON.parse(rawKeyword);
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const getIsBeatFilmFromLocalStorage = () => {
+    const rawIsBeatFilm = localStorage.getItem('isBeatFilm');
+    if (!rawIsBeatFilm) return null;
+    try {
+      return JSON.parse(rawIsBeatFilm);
+    } catch (err) {
+      return null;
+    }
+  };
+
   // TODO: delete and use from another file
   const getFilteredFilms = (collection, keyWord, isBeatFilm) => collection
     .filter(({ nameRU, duration }) => {
@@ -180,9 +200,9 @@ const App = () => {
   let visibleСards = getVisibleCards(collection, searchKeyword, isBeatFilm);
 
   const handleSearchSubmit = (keyword) => {
-    setSearchKeyword(keyword);
     setIsLoading(true);
     setSearchKeyword(keyword);
+    localStorage.setItem('keyword', JSON.stringify(keyword));
     filteredCards = getFilteredFilms(collection, searchKeyword, isBeatFilm);
     visibleСards = getVisibleCards(collection, keyword, isBeatFilm);
     setIsLoading(false);
@@ -193,6 +213,7 @@ const App = () => {
 
   const handleIsBeatFilmChanged = (value) => {
     setIsBeatFilm(value);
+    localStorage.setItem('isBeatFilm', JSON.stringify(value));
   }
 
   const handleAddMoreByClick = () => {
@@ -322,19 +343,20 @@ const App = () => {
       setFilms(allFilms);
       setSavedFilms(savedFilms);
     })();
+    // TO DO: получить параметры запроса из localStorage
+    const initialKeyword = getKeywordFromLocalStorage();
+    const isBeatFilm = getIsBeatFilmFromLocalStorage() === null ? true : getIsBeatFilmFromLocalStorage();
+    setSearchKeyword(initialKeyword);
+    setIsBeatFilm(isBeatFilm);
   }, [loggedIn]);
 
   useEffect(() => {
     if (location.pathname === '/saved-movies') {
       return;
     }
-    console.log('visibleСards', visibleСards);
-    console.log('collection', collection);
-    console.log('filteredCards', filteredCards);
     if (
       visibleСards.length &&
       collection.length &&
-      // visibleСards[visibleСards.length - 1].movieId !== filteredCards[filteredCards.length - 1].movieId)
       visibleСards.length < filteredCards.length)
     {
       setDisplayMore(true);
