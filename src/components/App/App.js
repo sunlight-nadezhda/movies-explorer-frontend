@@ -13,39 +13,12 @@ import moviesApi from '../../utils/MoviesApi';
 import api from '../../utils/MainApi';
 import { CurrentUserContext } from '../../utils/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import { constants } from '../../utils/constants';
+import { getDisplayCardsAmount } from '../../utils/getDisplayCardsAmount';
 import { filterFilms } from '../../utils/filterFilms';
-
-const {
-  durationBeatFilm,
-  smallScreenWidth,
-  mediumScreenWidth,
-  maxFirstShowCardsOnMobile,
-  maxFirstShowCardsOnNotebook,
-  maxFirstShowCardsOnDesctop,
-  numberAddForMoreButtonOnMobile,
-  numberAddForMoreButtonOnDesctop,
-} = constants;
-
-const getDisplayCardsAmount = () => {
-  const screenWidth = window.screen.width;
-  if (screenWidth < smallScreenWidth) {
-    return {
-      maxFirstShowCards: maxFirstShowCardsOnMobile,
-      numberAdd: numberAddForMoreButtonOnMobile,
-    };
-  } else if (screenWidth < mediumScreenWidth) {
-    return {
-      maxFirstShowCards: maxFirstShowCardsOnNotebook,
-      numberAdd: numberAddForMoreButtonOnMobile,
-    };
-  } else {
-    return {
-      maxFirstShowCards: maxFirstShowCardsOnDesctop,
-      numberAdd: numberAddForMoreButtonOnDesctop,
-    };
-  }
-};
+import { getFilteredFilms } from '../../utils/getFilteredFilms';
+import { getFilmsFromLocalStorage } from '../../utils/getDataFromLocalStorage';
+import { getKeywordFromLocalStorage } from '../../utils/getDataFromLocalStorage';
+import { getIsBeatFilmFromLocalStorage } from '../../utils/getDataFromLocalStorage';
 
 const App = () => {
   const [films, setFilms] = useState([]);
@@ -109,16 +82,6 @@ const App = () => {
     }));
   };
 
-  const getFilmsFromLocalStorage = () => {
-    const rawFilms = localStorage.getItem('films');
-    if (!rawFilms) return null;
-    try {
-      return JSON.parse(rawFilms);
-    } catch (err) {
-      return null;
-    }
-  };
-
   const getAllFilms = async () => {
     const localFilms = getFilmsFromLocalStorage();
     try {
@@ -154,38 +117,9 @@ const App = () => {
     return { allFilms, savedFilms };
   };
 
-  const getKeywordFromLocalStorage = () => {
-    const rawKeyword = localStorage.getItem('keyword');
-    if (!rawKeyword) return null;
-    try {
-      return JSON.parse(rawKeyword);
-    } catch (err) {
-      return null;
-    }
-  };
-
-  const getIsBeatFilmFromLocalStorage = () => {
-    const rawIsBeatFilm = localStorage.getItem('isBeatFilm');
-    if (!rawIsBeatFilm) return null;
-    try {
-      return JSON.parse(rawIsBeatFilm);
-    } catch (err) {
-      return null;
-    }
-  };
-
-  // TODO: delete and use from another file
-  const getFilteredFilms = (collection, keyWord, isBeatFilm) => collection
-    .filter(({ nameRU, duration }) => {
-      if (isBeatFilm && duration > durationBeatFilm) return false;
-      return nameRU.toLowerCase().includes(keyWord.toLowerCase());
-    });
-
   const collection = location.pathname === '/saved-movies'
     ? savedFilms
     : films;
-
-  // TODO: move to Movies.js
 
   const getVisibleCards = (collection, keyword, isBeatFilm) => {
     if (location.pathname === '/saved-movies') return [];
@@ -203,6 +137,7 @@ const App = () => {
     setIsLoading(true);
     setSearchKeyword(keyword);
     localStorage.setItem('keyword', JSON.stringify(keyword));
+    localStorage.setItem('isBeatFilm', JSON.stringify(true));
     filteredCards = getFilteredFilms(collection, searchKeyword, isBeatFilm);
     visibleСards = getVisibleCards(collection, keyword, isBeatFilm);
     setIsLoading(false);
@@ -263,6 +198,7 @@ const App = () => {
             setLoggedIn(false);
             setCurrentUser(null);
             history.push("/");
+            localStorage.clear();
           }
         })
         .catch((err) => console.log(err));
@@ -307,7 +243,7 @@ const App = () => {
     setIsLoading(true);
     api.saveFilm(film)
       .then(dataFilm => {
-        setSavedFilms([...savedFilms, dataFilm]); // TODO: Check is setSavedFilms needed
+        setSavedFilms([...savedFilms, dataFilm]);
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -324,7 +260,7 @@ const App = () => {
     const deletedFilm = savedFilms.find((film) => film.movieId === clickedFilm.movieId);
     api.deleteFilm(deletedFilm._id)
       .then(dataFilm => {
-        setSavedFilms((state) => state.filter((c) => c._id !== deletedFilm._id)); // TODO: Check is setSavedFilms needed
+        setSavedFilms((state) => state.filter((c) => c._id !== deletedFilm._id));
         setIsLoading(false);
         setDisplayCards(true);
         setWasRequest(true);
@@ -343,8 +279,7 @@ const App = () => {
       setFilms(allFilms);
       setSavedFilms(savedFilms);
     })();
-    // TO DO: получить параметры запроса из localStorage
-    const initialKeyword = getKeywordFromLocalStorage();
+    const initialKeyword = getKeywordFromLocalStorage() || '';
     const isBeatFilm = getIsBeatFilmFromLocalStorage() === null ? true : getIsBeatFilmFromLocalStorage();
     setSearchKeyword(initialKeyword);
     setIsBeatFilm(isBeatFilm);
@@ -364,7 +299,6 @@ const App = () => {
       setDisplayMore(false);
     }
   }, [collection, visibleСards, location.pathname]);
-  // END of TODO
 
   useEffect(() => {
     let resizeTimeout;

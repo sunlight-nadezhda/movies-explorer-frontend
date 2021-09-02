@@ -67,10 +67,10 @@ const Login = (props) => {
         ? ''
         : Object.entries(errors)
           .map(([errKey, errValue]) => (
-            <ErrorMessage key={errKey} text={errValue} />
+            <ErrorMessage key={errKey} text={errValue} isErrorVisible={true} />
           ))}
 
-      <ErrorMessage text={props.errorText} />
+      <ErrorMessage text={props.errorText} isErrorVisible={props.isErrorVisible} />
 
       <input
         type="submit"

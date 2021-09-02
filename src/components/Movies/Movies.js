@@ -26,7 +26,6 @@ const Movies = (props) => {
         <SearchForm
           isBeatFilm={isBeatFilm}
           setIsBeatFilm={props.setIsBeatFilm}
-          keyWord={props.keyWord}
           setKeyWord={props.setKeyWord}
           initialKeyword={searchKeyword}
           onSubmit={onSearchSubmit}

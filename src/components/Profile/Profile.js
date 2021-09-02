@@ -82,10 +82,10 @@ const Profile = (props) => {
               ? ''
               : Object.entries(errors)
                 .map(([errKey, errValue]) => (
-                  <ErrorMessage key={errKey} text={errValue} />
+                  <ErrorMessage key={errKey} text={errValue} isErrorVisible={true} />
                 ))}
 
-            <ErrorMessage text={props.errorText} />
+            <ErrorMessage text={props.errorText} isErrorVisible={props.isErrorVisible} />
             <div className="profile__success-message" style={{
               display: props.showSuccessMessage ? 'block' : 'none'
             }}>Профиль успешно отредактирован</div>
@@ -93,7 +93,9 @@ const Profile = (props) => {
             <input
               type="submit"
               value="Редактировать"
-              className={`profile__edit-button${!isValid
+              className={`profile__edit-button${!isValid &&
+                (currentUser.name === name ||
+                currentUser.email === email)
                 ? ' profile__edit-button_disabled'
                 : ''}`}
             />
