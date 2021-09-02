@@ -186,12 +186,23 @@ const App = () => {
     return filteredCards;
   };
 
-  const visibleСards = getVisibleCards(collection, searchKeyword, isBeatFilm);
+  let visibleСards = getVisibleCards(collection, searchKeyword, isBeatFilm);
 
   const handleSearchSubmit = (keyword) => {
-    setIsLoading(true);
     setSearchKeyword(keyword);
     // TODO: start search
+    setIsLoading(true);
+    console.log('keyword', keyword);
+    console.log('isBeatFilm', isBeatFilm);
+    console.log('collection', collection);
+    setSearchKeyword(keyword);
+    visibleСards = getVisibleCards(collection, keyword, isBeatFilm);
+    console.log('searchKeyword', searchKeyword);
+    console.log('visibleСards', visibleСards);
+    setIsLoading(false);
+    setDisplayCards(true);
+    setWasRequest(true);
+    setVisibleCardCount(numberCards.maxFirstShowCards);
   };
 
   const handleIsBeatFilmChanged = (value) => {
