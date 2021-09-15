@@ -7,19 +7,11 @@ import Techs from "../Techs/Techs";
 import AboutMe from "../AboutMe/AboutMe";
 import Footer from "../Footer/Footer";
 
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: props.loggedIn,
-    };
-  }
-
-  render() {
+const Main = (props) => {
     return (
       <div className="page">
         <Header
-          loggedIn={this.state.loggedIn}
+          loggedIn={props.loggedIn}
         />
         <main>
           <Promo />
@@ -30,7 +22,6 @@ class Main extends React.Component {
         <Footer />
       </div>
     );
-  }
 }
 
 export default Main;

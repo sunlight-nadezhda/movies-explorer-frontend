@@ -2,12 +2,24 @@
   background: #FDFDFD;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
   border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card__link {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .card__header {
   padding: 18px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: auto;
 }
 
 .card__name {
@@ -15,6 +27,7 @@
   font-size: 15px;
   line-height: 18px;
   color: #000000;
+  max-width: 70%;
 }
 
 .card__duration {
@@ -22,6 +35,7 @@
   font-size: 13px;
   line-height: 18px;
   color: #A0A0A0;
+  min-width: 70px;
 }
 
 .card__image {
@@ -48,7 +62,7 @@
   color: #000000;
 }
 
-.card__button {
+.card__button:hover {
   cursor: pointer;
 }
 

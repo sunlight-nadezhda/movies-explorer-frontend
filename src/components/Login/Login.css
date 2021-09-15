@@ -77,6 +77,10 @@
   cursor: pointer;
 }
 
+.login__sign-button_disabled {
+  opacity: .4;
+}
+
 .login__reg-block {
   margin: 16px 0 0;
   text-align: center;

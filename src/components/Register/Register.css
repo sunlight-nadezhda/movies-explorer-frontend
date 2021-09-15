@@ -47,14 +47,6 @@
   color: #FF4062;
 }
 
-.register__error-message {
-  margin-top: 6px;
-  font-weight: normal;
-  font-size: 10px;
-  line-height: 12px;
-  color: #FF4062;
-}
-
 .register__sign-button {
   margin-top: 134px;
   display: block;
@@ -71,6 +63,10 @@
 
 .register__sign-button:hover {
   cursor: pointer;
+}
+
+.register__sign-button_disabled {
+  opacity: .4;
 }
 
 .register__login-block {

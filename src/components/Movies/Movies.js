@@ -6,33 +6,49 @@ import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import More from "../More/More";
 
-class Movies extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: props.loggedIn,
-    };
-  }
 
-  render() {
-    return (
-      <div className="page">
-        <Header
-          loggedIn={this.state.loggedIn}
-          onOpenMenu={this.props.onOpenMenu}
+
+const Movies = (props) => {
+  const {
+    isBeatFilm,
+    searchKeyword,
+    cards,
+    onSearchSubmit,
+    onIsBeatFilmChanged
+  } = props;
+  return (
+    <div className="page">
+      <Header
+        loggedIn={props.loggedIn}
+        onOpenMenu={props.onOpenMenu}
+      />
+      <main>
+        <SearchForm
+          isBeatFilm={isBeatFilm}
+          setIsBeatFilm={props.setIsBeatFilm}
+          setKeyWord={props.setKeyWord}
+          initialKeyword={searchKeyword}
+          onSubmit={onSearchSubmit}
+          onIsBeatFilmChanged={onIsBeatFilmChanged}
         />
-        <main>
-          <SearchForm />
-          <MoviesCardList
-            cards={this.props.cards}
-            isSavedMovies={this.props.isSavedMovies}
-          />
-          <More />
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+        <MoviesCardList
+          isSavedMovies={false}
+          savedFilms={props.savedFilms}
+          setIsFilmSaved={props.setIsFilmSaved}
+          displayCards={props.displayCards}
+          isLoading={props.isLoading}
+          isErrorVisible={props.isErrorVisible}
+          wasRequest={props.wasRequest}
+          cards={cards}
+          onSaveFilm={props.onSaveFilm}
+          onDeleteFilm={props.onDeleteFilm}
+          errorText={props.errorText}
+        />
+        <More displayBlock={props.displayMore} onAddCards={props.onAddCards} />
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
 export default Movies;

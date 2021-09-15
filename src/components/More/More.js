@@ -1,15 +1,12 @@
 import React from 'react';
 import './More.css';
 
-class More extends React.Component {
-
-  render() {
-    return (
-      <section className="more">
-        <button className="more__button">Ещё</button>
-      </section>
-    );
-  }
+const More = (props) => {
+  return (
+    <section className={`more ${props.displayBlock ? 'show-more' : 'hide-block'}`}>
+      <button className="more__button" onClick={props.onAddCards}>Ещё</button>
+    </section>
+  );
 }
 
 export default More;

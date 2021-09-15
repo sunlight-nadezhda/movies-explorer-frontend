@@ -1,0 +1,11 @@
+.hide-block {
+  display: none;
+}
+
+.show-more {
+  display: block;
+}
+
+.show-cards {
+  display: grid;
+}
