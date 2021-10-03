@@ -1,74 +1,71 @@
-# Getting Started with Create React App
+# Фронтенд часть приложения movies-explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Этот проект был создан с помощью [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Обзор
+* Интро
+* Технологии
 
-In the project directory, you can run:
+**Интро**
+
+Это дипломный проект, который содержит лендинг-страницу портфолио.
+Для работы с данным приложением надо зарегистрироваться или авторизоваться на нём.
+Список фильмов загружается с сервера [https://api.nomoreparties.co/beatfilm-movies](https://api.nomoreparties.co/beatfilm-movies).
+Далее по этому списку фильмом осуществляется поиск. Выбранные фильмы сохраняются в личном кабинете, из которого их можно удалить.
+Перед отправкой данных, они проверяются на стороне клиента (реализована валидация).
+
+**Технологии**
+
+* БЭМ
+* адаптивность под разные устройства
+* javascript
+* fetch
+* React
+* функциональные компоненты
+* React-хуки: useState и useEffect с замыканием
+* Работа с React.createContext
+* Создание React списков с ключами
+* Управляемые и неуправляемые компоненты
+
+## Доступные скрипты
+
+В каталоге проекта вы можете запустить:
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Запускает приложение в режиме разработки.\
+Откройте [http://localhost:3000](http://localhost:3000), чтобы просмотреть его в браузере.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Страница перезагрузится, если вы внесете правки.\
+Вы также увидите любые ошибки в консоли.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Собирает приложение для публикации в папку `build`.\
+Оптимизирует сборку для достижения максимальной производительности.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Сборка минифицирована, а имена файлов включают хеши.\
+Ваше приложение готово к публикации!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Смотрите раздел о [deployment](https://facebook.github.io/create-react-app/docs/deployment) для дополнительной информации.
 
 ### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Примечание: это односторонняя операция. После того, как вы выполните `eject`, вы не сможете вернуться!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Если вас не устраивает инструмент сборки и выбор конфигурации, вы можете сделать `eject` в любой момент. Эта команда удалит из вашего проекта зависимость отдельной сборки.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Вместо этого он скопирует все файлы конфигурации и транзитивные зависимости (webpack, Babel, ESLint и т.д.) Прямо в ваш проект, чтобы вы имели полный контроль над ними. Все команды, кроме `eject`, по-прежнему будут работать, но они будут указывать на скопированные сценарии, чтобы вы могли их настроить.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### `npm run deploy`
 
-## Learn More
+Сначала проект собирается в папке `build`.\
+Потом на Github создается ветка `gh-pages`. \
+В нее копируется содержимое папки `build`. \
+Затем надо в настройках Github выбрать `gh-pages`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Смотрите раздел о [deployment on github-pages](https://create-react-app.dev/docs/deployment/#github-pages) для дополнительной информации.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-макет: https://disk.yandex.ru/d/xKH2ZT6GDMnpCA  
-frontend: movies-explorer.sun.nomoredomains.monster  
-backend: api.movies-explorer.sun.nomoredomains.monster  
+<!-- макет: https://disk.yandex.ru/d/xKH2ZT6GDMnpCA
+frontend: movies-explorer.sun.nomoredomains.monster
+backend: api.movies-explorer.sun.nomoredomains.monster   -->
