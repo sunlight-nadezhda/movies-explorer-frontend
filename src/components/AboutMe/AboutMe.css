@@ -10,6 +10,9 @@
 
 .about-me__image {
   border-radius: 10px;
+  width: 270px;
+  height: 327px;
+  object-fit: cover;
 }
 
 .about-me__text {
