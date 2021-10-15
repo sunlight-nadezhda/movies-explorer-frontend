@@ -40,7 +40,7 @@ it("changes value when clicked", () => {
   expect(toggle.checked).toBeFalsy();
 
   act(() => {
-    filter.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, composed: true }));
+    filter.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   });
 
   expect(onChange).toHaveBeenCalledTimes(1);
