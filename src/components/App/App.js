@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Route, Switch, useHistory, Redirect, useLocation } from 'react-router-dom';
 import './App.css';
 import Main from '../Main/Main';
@@ -82,23 +82,26 @@ const App = () => {
     }));
   };
 
-  const getAllFilms = async () => {
-    const localFilms = getFilmsFromLocalStorage();
-    try {
-      const films = localFilms === null
-        ? await getFilmsFromApi()
-        : localFilms;
-      if (localFilms === null) {
-        localStorage.setItem('films', JSON.stringify(films));
+  const memoizedGetAllFilms = useCallback(
+    async () => {
+      const localFilms = getFilmsFromLocalStorage();
+      try {
+        const films = localFilms === null
+          ? await getFilmsFromApi()
+          : localFilms;
+        if (localFilms === null) {
+          localStorage.setItem('films', JSON.stringify(films));
+        }
+        return films;
+      } catch (err) {
+        setIsErrorVisible(true);
+        setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+        setVisibleCardCount(0);
+        console.log(err);
       }
-      return films;
-    } catch (err) {
-      setIsErrorVisible(true);
-      setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-      setVisibleCardCount(0);
-      console.log(err);
-    }
-  };
+    },
+    [],
+  );
 
   const getSavedFilms = async () => {
     try {
@@ -111,11 +114,14 @@ const App = () => {
     }
   };
 
-  const getFilms = async () => {
-    const allFilms = await getAllFilms();
-    const savedFilms = await getSavedFilms();
-    return { allFilms, savedFilms };
-  };
+  const memoizedGetFilms = useCallback(
+    async () => {
+      const allFilms = await memoizedGetAllFilms();
+      const savedFilms = await getSavedFilms();
+      return { allFilms, savedFilms };
+    },
+    [memoizedGetAllFilms],
+  );
 
   const collection = location.pathname === '/saved-movies'
     ? savedFilms
@@ -165,7 +171,7 @@ const App = () => {
             name: userData.name,
             email: userData.email,
           });
-          checkAuth();
+          memoizedCheckAuth();
           setLoggedIn(true);
         }
       })
@@ -180,7 +186,7 @@ const App = () => {
     api.authorize(userData)
       .then((response) => {
         if (response) {
-          checkAuth();
+          memoizedCheckAuth();
         }
       })
       .catch((err) => {
@@ -205,24 +211,27 @@ const App = () => {
     }
   };
 
-  const checkAuth = () => {
-    api.checkToken()
-      .then((userData) => {
-        if (userData) {
-          setCurrentUser(userData);
-          setLoggedIn(true);
-          history.push(location.pathname === '/signup'
-            || location.pathname === '/signin'
-            || location.pathname === '/'
-            ? '/movies' : location.pathname === '/movies'
-              || location.pathname === '/saved-movies'
-              || location.pathname === '/profile'
-              ? location.pathname
-              : '/not-found');
-        }
-      })
-      .catch((err) => console.log(err));
-  }
+  const memoizedCheckAuth = useCallback(
+    () => {
+      api.checkToken()
+        .then((userData) => {
+          if (userData) {
+            setCurrentUser(userData);
+            setLoggedIn(true);
+            history.push(location.pathname === '/signup'
+              || location.pathname === '/signin'
+              || location.pathname === '/'
+              ? '/movies' : location.pathname === '/movies'
+                || location.pathname === '/saved-movies'
+                || location.pathname === '/profile'
+                ? location.pathname
+                : '/not-found');
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+    [history, location.pathname],
+  );
 
   const handleEditProfile = (data) => {
     setIsLoading(true);
@@ -275,7 +284,7 @@ const App = () => {
   useEffect(() => {
     if (!loggedIn) return;
     (async () => {
-      const { allFilms, savedFilms } = await getFilms();
+      const { allFilms, savedFilms } = await memoizedGetFilms();
       setFilms(allFilms);
       setSavedFilms(savedFilms);
     })();
@@ -283,7 +292,7 @@ const App = () => {
     const isBeatFilm = getIsBeatFilmFromLocalStorage() === null ? true : getIsBeatFilmFromLocalStorage();
     setSearchKeyword(initialKeyword);
     setIsBeatFilm(isBeatFilm);
-  }, [loggedIn]);
+  }, [loggedIn, memoizedGetFilms]);
 
   useEffect(() => {
     if (location.pathname === '/saved-movies') {
@@ -298,7 +307,7 @@ const App = () => {
     } else {
       setDisplayMore(false);
     }
-  }, [collection, visibleСards, location.pathname]);
+  }, [collection, visibleСards, location.pathname, filteredCards.length]);
 
   useEffect(() => {
     let resizeTimeout;
@@ -317,8 +326,8 @@ const App = () => {
   });
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    memoizedCheckAuth();
+  }, [memoizedCheckAuth]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
